@@ -1,0 +1,50 @@
+{
+    "sourceFile": "main.go",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 8,
+            "patches": [
+                {
+                    "date": 1711497974399,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1711497992977,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -27,9 +27,9 @@\n )\n \n //!+main\n \n-var palette = []color.Color{color., color.Black}\n+var palette = []color.Color{co, color.Black}\n \n const (\n \twhiteIndex = 0 // first color in palette\n \tblackIndex = 1 // next color in palette\n"
+                },
+                {
+                    "date": 1711497999649,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -27,9 +27,9 @@\n )\n \n //!+main\n \n-var palette = []color.Color{co, color.Black}\n+var palette = []color.Color{color., color.Black}\n \n const (\n \twhiteIndex = 0 // first color in palette\n \tblackIndex = 1 // next color in palette\n"
+                },
+                {
+                    "date": 1711498005033,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -27,9 +27,9 @@\n )\n \n //!+main\n \n-var palette = []color.Color{color., color.Black}\n+var palette = []color.Color{color.RGBA{}, color.Black}\n \n const (\n \twhiteIndex = 0 // first color in palette\n \tblackIndex = 1 // next color in palette\n"
+                },
+                {
+                    "date": 1711498016180,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -27,9 +27,9 @@\n )\n \n //!+main\n \n-var palette = []color.Color{color.RGBA{}, color.Black}\n+var palette = []color.Color{color.RGBA{0xRR}, color.Black}\n \n const (\n \twhiteIndex = 0 // first color in palette\n \tblackIndex = 1 // next color in palette\n"
+                },
+                {
+                    "date": 1711498022371,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -27,9 +27,9 @@\n )\n \n //!+main\n \n-var palette = []color.Color{color.RGBA{0xRR}, color.Black}\n+var palette = []color.Color{color.RGBA{0xRR, 0x}, color.Black}\n \n const (\n \twhiteIndex = 0 // first color in palette\n \tblackIndex = 1 // next color in palette\n"
+                },
+                {
+                    "date": 1711498031675,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -27,9 +27,9 @@\n )\n \n //!+main\n \n-var palette = []color.Color{color.RGBA{0xRR, 0x}, color.Black}\n+var palette = []color.Color{color.RGBA{0xRR, 0xGG}, color.Black}\n \n const (\n \twhiteIndex = 0 // first color in palette\n \tblackIndex = 1 // next color in palette\n"
+                },
+                {
+                    "date": 1711498038592,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -27,9 +27,9 @@\n )\n \n //!+main\n \n-var palette = []color.Color{color.RGBA{0xRR, 0xGG}, color.Black}\n+var palette = []color.Color{color.RGBA{}, color.Black}\n \n const (\n \twhiteIndex = 0 // first color in palette\n \tblackIndex = 1 // next color in palette\n"
+                },
+                {
+                    "date": 1711498048679,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -27,9 +27,9 @@\n )\n \n //!+main\n \n-var palette = []color.Color{color.RGBA{0x00}, color.Black}\n+var palette = []color.Color{color.RGBA{0x00,}, color.Black}\n \n const (\n \twhiteIndex = 0 // first color in palette\n \tblackIndex = 1 // next color in palette\n"
+                }
+            ],
+            "date": 1711497974399,
+            "name": "Commit-0",
+            "content": "// Copyright © 2016 Alan A. A. Donovan & Brian W. Kernighan.\n// License: https://creativecommons.org/licenses/by-nc-sa/4.0/\n\n// Run with \"web\" command-line argument for web server.\n// See page 13.\n//!+main\n\n// Lissajous generates GIF animations of random Lissajous figures.\npackage main\n\nimport (\n\t\"image\"\n\t\"image/color\"\n\t\"image/gif\"\n\t\"io\"\n\t\"math\"\n\t\"math/rand\"\n\t\"os\"\n)\n\n//!-main\n// Packages not needed by version in book.\nimport (\n\t\"log\"\n\t\"net/http\"\n\t\"time\"\n)\n\n//!+main\n\nvar palette = []color.Color{color., color.Black}\n\nconst (\n\twhiteIndex = 0 // first color in palette\n\tblackIndex = 1 // next color in palette\n)\n\nfunc main() {\n\t//!-main\n\t// The sequence of images is deterministic unless we seed\n\t// the pseudo-random number generator using the current time.\n\t// Thanks to Randall McPherson for pointing out the omission.\n\trand.Seed(time.Now().UTC().UnixNano())\n\n\tif len(os.Args) > 1 && os.Args[1] == \"web\" {\n\t\t//!+http\n\t\thandler := func(w http.ResponseWriter, r *http.Request) {\n\t\t\tlissajous(w)\n\t\t}\n\t\thttp.HandleFunc(\"/\", handler)\n\t\t//!-http\n\t\tlog.Fatal(http.ListenAndServe(\"localhost:8000\", nil))\n\t\treturn\n\t}\n\t//!+main\n\tlissajous(os.Stdout)\n}\n\nfunc lissajous(out io.Writer) {\n\tconst (\n\t\tcycles  = 5     // number of complete x oscillator revolutions\n\t\tres     = 0.001 // angular resolution\n\t\tsize    = 100   // image canvas covers [-size..+size]\n\t\tnframes = 64    // number of animation frames\n\t\tdelay   = 8     // delay between frames in 10ms units\n\t)\n\tfreq := rand.Float64() * 3.0 // relative frequency of y oscillator\n\tanim := gif.GIF{LoopCount: nframes}\n\tphase := 0.0 // phase difference\n\tfor i := 0; i < nframes; i++ {\n\t\trect := image.Rect(0, 0, 2*size+1, 2*size+1)\n\t\timg := image.NewPaletted(rect, palette)\n\t\tfor t := 0.0; t < cycles*2*math.Pi; t += res {\n\t\t\tx := math.Sin(t)\n\t\t\ty := math.Sin(t*freq + phase)\n\t\t\timg.SetColorIndex(size+int(x*size+0.5), size+int(y*size+0.5),\n\t\t\t\tblackIndex)\n\t\t}\n\t\tphase += 0.1\n\t\tanim.Delay = append(anim.Delay, delay)\n\t\tanim.Image = append(anim.Image, img)\n\t}\n\tgif.EncodeAll(out, &anim) // NOTE: ignoring encoding errors\n}\n\n//!-main\n"
+        }
+    ]
+}

@@ -13,26 +13,25 @@ import (
 	"image/color"
 	"image/gif"
 	"io"
+	"log"
 	"math"
 	"math/rand"
+	"net/http"
 	"os"
+	"time"
 )
 
 //!-main
 // Packages not needed by version in book.
-import (
-	"log"
-	"net/http"
-	"time"
-)
 
 //!+main
 
-var palette = []color.Color{color.White, color.Black}
+var palette = []color.Color{color.RGBA{0xe0, 0x6c, 0x65, 0xFF}}
 
 const (
 	whiteIndex = 0 // first color in palette
 	blackIndex = 1 // next color in palette
+
 )
 
 func main() {
