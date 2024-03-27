@@ -1,0 +1,198 @@
+{
+    "sourceFile": "fetch/main.go",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 45,
+            "patches": [
+                {
+                    "date": 1711538221246,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1711538433831,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -20,9 +20,9 @@\n \t\tif err != nil {\n \t\t\tfmt.Fprintf(os.Stderr, \"fetch: %v\\n\", err)\n \t\t\tos.Exit(1)\n \t\t}\n-\t\tb, err := ioutil.ReadAll(resp.Body)\n+\t\t\n \t\tresp.Body.Close()\n \t\tif err != nil {\n \t\t\tfmt.Fprintf(os.Stderr, \"fetch: reading %s: %v\\n\", url, err)\n \t\t\tos.Exit(1)\n"
+                },
+                {
+                    "date": 1711538441550,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -8,8 +8,9 @@\n package main\n \n import (\n \t\"fmt\"\n+\t\"io\"\n \t\"io/ioutil\"\n \t\"net/http\"\n \t\"os\"\n )\n@@ -20,9 +21,9 @@\n \t\tif err != nil {\n \t\t\tfmt.Fprintf(os.Stderr, \"fetch: %v\\n\", err)\n \t\t\tos.Exit(1)\n \t\t}\n-\t\t\n+\t\tio.Copy(ioutil.Discard, resp.Body)\n \t\tresp.Body.Close()\n \t\tif err != nil {\n \t\t\tfmt.Fprintf(os.Stderr, \"fetch: reading %s: %v\\n\", url, err)\n \t\t\tos.Exit(1)\n"
+                },
+                {
+                    "date": 1711538446737,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -21,9 +21,9 @@\n \t\tif err != nil {\n \t\t\tfmt.Fprintf(os.Stderr, \"fetch: %v\\n\", err)\n \t\t\tos.Exit(1)\n \t\t}\n-\t\tio.Copy(ioutil.Discard, resp.Body)\n+\t\terr := .Copy(ioutil.Discard, resp.Body)\n \t\tresp.Body.Close()\n \t\tif err != nil {\n \t\t\tfmt.Fprintf(os.Stderr, \"fetch: reading %s: %v\\n\", url, err)\n \t\t\tos.Exit(1)\n"
+                },
+                {
+                    "date": 1711538461360,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -21,9 +21,9 @@\n \t\tif err != nil {\n \t\t\tfmt.Fprintf(os.Stderr, \"fetch: %v\\n\", err)\n \t\t\tos.Exit(1)\n \t\t}\n-\t\terr := .Copy(ioutil.Discard, resp.Body)\n+\t\tb err := io.Copy(ioutil.Discard, resp.Body)\n \t\tresp.Body.Close()\n \t\tif err != nil {\n \t\t\tfmt.Fprintf(os.Stderr, \"fetch: reading %s: %v\\n\", url, err)\n \t\t\tos.Exit(1)\n"
+                },
+                {
+                    "date": 1711538468267,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -22,8 +22,9 @@\n \t\t\tfmt.Fprintf(os.Stderr, \"fetch: %v\\n\", err)\n \t\t\tos.Exit(1)\n \t\t}\n \t\tb err := io.Copy(ioutil.Discard, resp.Body)\n+\t\tif \n \t\tresp.Body.Close()\n \t\tif err != nil {\n \t\t\tfmt.Fprintf(os.Stderr, \"fetch: reading %s: %v\\n\", url, err)\n \t\t\tos.Exit(1)\n"
+                },
+                {
+                    "date": 1711538474054,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -22,9 +22,12 @@\n \t\t\tfmt.Fprintf(os.Stderr, \"fetch: %v\\n\", err)\n \t\t\tos.Exit(1)\n \t\t}\n \t\tb err := io.Copy(ioutil.Discard, resp.Body)\n-\t\tif \n+\t\tif err != nil {\n+\t\t\tfmt.Fprintf(os.Stderr, \"fetch: reading %s: %v\\n\", url, err)\n+\t\t\tos.Exit(1)\n+\t\t\t\n \t\tresp.Body.Close()\n \t\tif err != nil {\n \t\t\tfmt.Fprintf(os.Stderr, \"fetch: reading %s: %v\\n\", url, err)\n \t\t\tos.Exit(1)\n"
+                },
+                {
+                    "date": 1711538479638,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -21,13 +21,13 @@\n \t\tif err != nil {\n \t\t\tfmt.Fprintf(os.Stderr, \"fetch: %v\\n\", err)\n \t\t\tos.Exit(1)\n \t\t}\n-\t\tb err := io.Copy(ioutil.Discard, resp.Body)\n+\t\tb, err := io.Copy(ioutil.Discard, resp.Body)\n \t\tif err != nil {\n \t\t\tfmt.Fprintf(os.Stderr, \"fetch: reading %s: %v\\n\", url, err)\n \t\t\tos.Exit(1)\n-\t\t\t\n+\t\t}\n \t\tresp.Body.Close()\n \t\tif err != nil {\n \t\t\tfmt.Fprintf(os.Stderr, \"fetch: reading %s: %v\\n\", url, err)\n \t\t\tos.Exit(1)\n"
+                },
+                {
+                    "date": 1711538509784,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -17,23 +17,9 @@\n \n func main() {\n \tfor _, url := range os.Args[1:] {\n \t\tresp, err := http.Get(url)\n-\t\tif err != nil {\n-\t\t\tfmt.Fprintf(os.Stderr, \"fetch: %v\\n\", err)\n-\t\t\tos.Exit(1)\n-\t\t}\n-\t\tb, err := io.Copy(ioutil.Discard, resp.Body)\n-\t\tif err != nil {\n-\t\t\tfmt.Fprintf(os.Stderr, \"fetch: reading %s: %v\\n\", url, err)\n-\t\t\tos.Exit(1)\n-\t\t}\n-\t\tresp.Body.Close()\n-\t\tif err != nil {\n-\t\t\tfmt.Fprintf(os.Stderr, \"fetch: reading %s: %v\\n\", url, err)\n-\t\t\tos.Exit(1)\n-\t\t}\n-\t\tfmt.Printf(\"%s\", b)\n+\t\tfmt.Printf(\"%s\", strconv.FormatInt(b, 10))\n \t}\n }\n \n //!-\n"
+                },
+                {
+                    "date": 1711538517228,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -17,9 +17,23 @@\n \n func main() {\n \tfor _, url := range os.Args[1:] {\n \t\tresp, err := http.Get(url)\n-\t\tfmt.Printf(\"%s\", strconv.FormatInt(b, 10))\n+\t\tif err != nil {\n+\t\t\tfmt.Fprintf(os.Stderr, \"fetch: %v\\n\", err)\n+\t\t\tos.Exit(1)\n+\t\t}\n+\t\tb, err := io.Copy(ioutil.Discard, resp.Body)\n+\t\tif err != nil {\n+\t\t\tfmt.Fprintf(os.Stderr, \"fetch: reading %s: %v\\n\", url, err)\n+\t\t\tos.Exit(1)\n+\t\t}\n+\t\tresp.Body.Close()\n+\t\tif err != nil {\n+\t\t\tfmt.Fprintf(os.Stderr, \"fetch: reading %s: %v\\n\", url, err)\n+\t\t\tos.Exit(1)\n+\t\t}\n+\t\tfmt.Printf(\"%\", b)\n \t}\n }\n \n //!-\n"
+                },
+                {
+                    "date": 1711538570624,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -21,9 +21,9 @@\n \t\tif err != nil {\n \t\t\tfmt.Fprintf(os.Stderr, \"fetch: %v\\n\", err)\n \t\t\tos.Exit(1)\n \t\t}\n-\t\tb, err := io.Copy(ioutil.Discard, resp.Body)\n+\t\tb, err := \n \t\tif err != nil {\n \t\t\tfmt.Fprintf(os.Stderr, \"fetch: reading %s: %v\\n\", url, err)\n \t\t\tos.Exit(1)\n \t\t}\n@@ -31,9 +31,9 @@\n \t\tif err != nil {\n \t\t\tfmt.Fprintf(os.Stderr, \"fetch: reading %s: %v\\n\", url, err)\n \t\t\tos.Exit(1)\n \t\t}\n-\t\tfmt.Printf(\"%\", b)\n+\t\tfmt.Printf(\"%v\", b)\n \t}\n }\n \n //!-\n"
+                },
+                {
+                    "date": 1711538578324,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -21,9 +21,9 @@\n \t\tif err != nil {\n \t\t\tfmt.Fprintf(os.Stderr, \"fetch: %v\\n\", err)\n \t\t\tos.Exit(1)\n \t\t}\n-\t\tb, err := \n+\t\tb, err := io\n \t\tif err != nil {\n \t\t\tfmt.Fprintf(os.Stderr, \"fetch: reading %s: %v\\n\", url, err)\n \t\t\tos.Exit(1)\n \t\t}\n"
+                },
+                {
+                    "date": 1711538614752,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -21,9 +21,10 @@\n \t\tif err != nil {\n \t\t\tfmt.Fprintf(os.Stderr, \"fetch: %v\\n\", err)\n \t\t\tos.Exit(1)\n \t\t}\n-\t\tb, err := io\n+\t\t\n+\t\tb, err := io.Copy()\n \t\tif err != nil {\n \t\t\tfmt.Fprintf(os.Stderr, \"fetch: reading %s: %v\\n\", url, err)\n \t\t\tos.Exit(1)\n \t\t}\n"
+                },
+                {
+                    "date": 1711538621277,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -21,9 +21,9 @@\n \t\tif err != nil {\n \t\t\tfmt.Fprintf(os.Stderr, \"fetch: %v\\n\", err)\n \t\t\tos.Exit(1)\n \t\t}\n-\t\t\n+\t\tdst := \n \t\tb, err := io.Copy()\n \t\tif err != nil {\n \t\t\tfmt.Fprintf(os.Stderr, \"fetch: reading %s: %v\\n\", url, err)\n \t\t\tos.Exit(1)\n"
+                },
+                {
+                    "date": 1711538628163,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -21,10 +21,10 @@\n \t\tif err != nil {\n \t\t\tfmt.Fprintf(os.Stderr, \"fetch: %v\\n\", err)\n \t\t\tos.Exit(1)\n \t\t}\n-\t\tdst := \n-\t\tb, err := io.Copy()\n+\t\tdst :=\n+\t\tb, err := io.Copy\n \t\tif err != nil {\n \t\t\tfmt.Fprintf(os.Stderr, \"fetch: reading %s: %v\\n\", url, err)\n \t\t\tos.Exit(1)\n \t\t}\n"
+                },
+                {
+                    "date": 1711538633263,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -21,10 +21,10 @@\n \t\tif err != nil {\n \t\t\tfmt.Fprintf(os.Stderr, \"fetch: %v\\n\", err)\n \t\t\tos.Exit(1)\n \t\t}\n-\t\tdst :=\n-\t\tb, err := io.Copy\n+\t\tdst := os.Stdout\n+\t\tb, err := io.Copy(ioutil.Discard, resp.Body)\n \t\tif err != nil {\n \t\t\tfmt.Fprintf(os.Stderr, \"fetch: reading %s: %v\\n\", url, err)\n \t\t\tos.Exit(1)\n \t\t}\n"
+                },
+                {
+                    "date": 1711538642893,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -22,9 +22,9 @@\n \t\t\tfmt.Fprintf(os.Stderr, \"fetch: %v\\n\", err)\n \t\t\tos.Exit(1)\n \t\t}\n \t\tdst := os.Stdout\n-\t\tb, err := io.Copy(ioutil.Discard, resp.Body)\n+\t\tb, err := io.Copy(, resp.Body)\n \t\tif err != nil {\n \t\t\tfmt.Fprintf(os.Stderr, \"fetch: reading %s: %v\\n\", url, err)\n \t\t\tos.Exit(1)\n \t\t}\n"
+                },
+                {
+                    "date": 1711538657704,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -21,10 +21,10 @@\n \t\tif err != nil {\n \t\t\tfmt.Fprintf(os.Stderr, \"fetch: %v\\n\", err)\n \t\t\tos.Exit(1)\n \t\t}\n-\t\tdst := os.Stdout\n-\t\tb, err := io.Copy(, resp.Body)\n+\t\tdst := os.W\n+\t\tb, err := io.Copy(dst, resp.Body)\n \t\tif err != nil {\n \t\t\tfmt.Fprintf(os.Stderr, \"fetch: reading %s: %v\\n\", url, err)\n \t\t\tos.Exit(1)\n \t\t}\n"
+                },
+                {
+                    "date": 1711538664611,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -21,9 +21,9 @@\n \t\tif err != nil {\n \t\t\tfmt.Fprintf(os.Stderr, \"fetch: %v\\n\", err)\n \t\t\tos.Exit(1)\n \t\t}\n-\t\tdst := os.W\n+\t\tdst := \n \t\tb, err := io.Copy(dst, resp.Body)\n \t\tif err != nil {\n \t\t\tfmt.Fprintf(os.Stderr, \"fetch: reading %s: %v\\n\", url, err)\n \t\t\tos.Exit(1)\n"
+                },
+                {
+                    "date": 1711538686102,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -21,9 +21,9 @@\n \t\tif err != nil {\n \t\t\tfmt.Fprintf(os.Stderr, \"fetch: %v\\n\", err)\n \t\t\tos.Exit(1)\n \t\t}\n-\t\tdst := \n+\t\tdst := os.Stdout\n \t\tb, err := io.Copy(dst, resp.Body)\n \t\tif err != nil {\n \t\t\tfmt.Fprintf(os.Stderr, \"fetch: reading %s: %v\\n\", url, err)\n \t\t\tos.Exit(1)\n@@ -32,9 +32,9 @@\n \t\tif err != nil {\n \t\t\tfmt.Fprintf(os.Stderr, \"fetch: reading %s: %v\\n\", url, err)\n \t\t\tos.Exit(1)\n \t\t}\n-\t\tfmt.Printf(\"%v\", b)\n+\t\tfmt.Printf(\"%s\", b)\n \t}\n }\n \n //!-\n"
+                },
+                {
+                    "date": 1711538700479,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -22,9 +22,9 @@\n \t\t\tfmt.Fprintf(os.Stderr, \"fetch: %v\\n\", err)\n \t\t\tos.Exit(1)\n \t\t}\n \t\tdst := os.Stdout\n-\t\tb, err := io.Copy(dst, resp.Body)\n+\t\t_, err := io.Copy(dst, resp.Body)\n \t\tif err != nil {\n \t\t\tfmt.Fprintf(os.Stderr, \"fetch: reading %s: %v\\n\", url, err)\n \t\t\tos.Exit(1)\n \t\t}\n@@ -32,9 +32,9 @@\n \t\tif err != nil {\n \t\t\tfmt.Fprintf(os.Stderr, \"fetch: reading %s: %v\\n\", url, err)\n \t\t\tos.Exit(1)\n \t\t}\n-\t\tfmt.Printf(\"%s\", b)\n+\t\tfmt.Printf(\"%s\", dst)\n \t}\n }\n \n //!-\n"
+                },
+                {
+                    "date": 1711538707441,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -22,9 +22,9 @@\n \t\t\tfmt.Fprintf(os.Stderr, \"fetch: %v\\n\", err)\n \t\t\tos.Exit(1)\n \t\t}\n \t\tdst := os.Stdout\n-\t\t_, err := io.Copy(dst, resp.Body)\n+\t\t, err := io.Copy(dst, resp.Body)\n \t\tif err != nil {\n \t\t\tfmt.Fprintf(os.Stderr, \"fetch: reading %s: %v\\n\", url, err)\n \t\t\tos.Exit(1)\n \t\t}\n"
+                },
+                {
+                    "date": 1711538714166,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -22,9 +22,9 @@\n \t\t\tfmt.Fprintf(os.Stderr, \"fetch: %v\\n\", err)\n \t\t\tos.Exit(1)\n \t\t}\n \t\tdst := os.Stdout\n-\t\t, err := io.Copy(dst, resp.Body)\n+\t\terr := io.Copy(dst, resp.Body)\n \t\tif err != nil {\n \t\t\tfmt.Fprintf(os.Stderr, \"fetch: reading %s: %v\\n\", url, err)\n \t\t\tos.Exit(1)\n \t\t}\n"
+                },
+                {
+                    "date": 1711538722986,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -22,9 +22,9 @@\n \t\t\tfmt.Fprintf(os.Stderr, \"fetch: %v\\n\", err)\n \t\t\tos.Exit(1)\n \t\t}\n \t\tdst := os.Stdout\n-\t\terr := io.Copy(dst, resp.Body)\n+\t\td, err := io.Copy(dst, resp.Body)\n \t\tif err != nil {\n \t\t\tfmt.Fprintf(os.Stderr, \"fetch: reading %s: %v\\n\", url, err)\n \t\t\tos.Exit(1)\n \t\t}\n"
+                },
+                {
+                    "date": 1711538731939,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -32,9 +32,9 @@\n \t\tif err != nil {\n \t\t\tfmt.Fprintf(os.Stderr, \"fetch: reading %s: %v\\n\", url, err)\n \t\t\tos.Exit(1)\n \t\t}\n-\t\tfmt.Printf(\"%s\", dst)\n+\t\tfmt.Printf(\"%v%s\", dst)\n \t}\n }\n \n //!-\n"
+                },
+                {
+                    "date": 1711538737705,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -32,9 +32,9 @@\n \t\tif err != nil {\n \t\t\tfmt.Fprintf(os.Stderr, \"fetch: reading %s: %v\\n\", url, err)\n \t\t\tos.Exit(1)\n \t\t}\n-\t\tfmt.Printf(\"%v%s\", dst)\n+\t\tfmt.Printf(\"%v\\n%s\", d,dst)\n \t}\n }\n \n //!-\n"
+                },
+                {
+                    "date": 1711538744235,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -9,9 +9,8 @@\n \n import (\n \t\"fmt\"\n \t\"io\"\n-\t\"io/ioutil\"\n \t\"net/http\"\n \t\"os\"\n )\n \n@@ -32,9 +31,9 @@\n \t\tif err != nil {\n \t\t\tfmt.Fprintf(os.Stderr, \"fetch: reading %s: %v\\n\", url, err)\n \t\t\tos.Exit(1)\n \t\t}\n-\t\tfmt.Printf(\"%v\\n%s\", d,dst)\n+\t\tfmt.Printf(\"%v\\n%s\", d, dst)\n \t}\n }\n \n //!-\n"
+                },
+                {
+                    "date": 1711538769700,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -31,9 +31,9 @@\n \t\tif err != nil {\n \t\t\tfmt.Fprintf(os.Stderr, \"fetch: reading %s: %v\\n\", url, err)\n \t\t\tos.Exit(1)\n \t\t}\n-\t\tfmt.Printf(\"%v\\n%s\", d, dst)\n+\t\tfmt.Printf(\"%v\\n%s\", dstd, )\n \t}\n }\n \n //!-\n"
+                },
+                {
+                    "date": 1711538776909,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -21,9 +21,9 @@\n \t\t\tfmt.Fprintf(os.Stderr, \"fetch: %v\\n\", err)\n \t\t\tos.Exit(1)\n \t\t}\n \t\tdst := os.Stdout\n-\t\td, err := io.Copy(dst, resp.Body)\n+\t\tb, err := io.Copy(dst, resp.Body)\n \t\tif err != nil {\n \t\t\tfmt.Fprintf(os.Stderr, \"fetch: reading %s: %v\\n\", url, err)\n \t\t\tos.Exit(1)\n \t\t}\n@@ -31,9 +31,9 @@\n \t\tif err != nil {\n \t\t\tfmt.Fprintf(os.Stderr, \"fetch: reading %s: %v\\n\", url, err)\n \t\t\tos.Exit(1)\n \t\t}\n-\t\tfmt.Printf(\"%v\\n%s\", dstd, )\n+\t\tfmt.Printf(\"%v\\n%s\", dst,b)\n \t}\n }\n \n //!-\n"
+                },
+                {
+                    "date": 1711538782423,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -31,9 +31,9 @@\n \t\tif err != nil {\n \t\t\tfmt.Fprintf(os.Stderr, \"fetch: reading %s: %v\\n\", url, err)\n \t\t\tos.Exit(1)\n \t\t}\n-\t\tfmt.Printf(\"%v\\n%s\", dst,b)\n+\t\tfmt.Printf(\"%s\\n%v\", dst,b)\n \t}\n }\n \n //!-\n"
+                },
+                {
+                    "date": 1711538798478,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -31,9 +31,9 @@\n \t\tif err != nil {\n \t\t\tfmt.Fprintf(os.Stderr, \"fetch: reading %s: %v\\n\", url, err)\n \t\t\tos.Exit(1)\n \t\t}\n-\t\tfmt.Printf(\"%s\\n%v\", dst,b)\n+\t\tfmt.Printf(\"%s\\n%v\", dst, b)\n \t}\n }\n \n //!-\n"
+                },
+                {
+                    "date": 1711538825333,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -15,8 +15,9 @@\n )\n \n func main() {\n \tfor _, url := range os.Args[1:] {\n+\t\tif \n \t\tresp, err := http.Get(url)\n \t\tif err != nil {\n \t\t\tfmt.Fprintf(os.Stderr, \"fetch: %v\\n\", err)\n \t\t\tos.Exit(1)\n"
+                },
+                {
+                    "date": 1711538832176,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -15,9 +15,9 @@\n )\n \n func main() {\n \tfor _, url := range os.Args[1:] {\n-\t\tif \n+\t\tif url\n \t\tresp, err := http.Get(url)\n \t\tif err != nil {\n \t\t\tfmt.Fprintf(os.Stderr, \"fetch: %v\\n\", err)\n \t\t\tos.Exit(1)\n"
+                },
+                {
+                    "date": 1711538842309,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -15,9 +15,9 @@\n )\n \n func main() {\n \tfor _, url := range os.Args[1:] {\n-\t\tif url\n+\t\tif url[:7]\n \t\tresp, err := http.Get(url)\n \t\tif err != nil {\n \t\t\tfmt.Fprintf(os.Stderr, \"fetch: %v\\n\", err)\n \t\t\tos.Exit(1)\n"
+                },
+                {
+                    "date": 1711538847965,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -15,9 +15,9 @@\n )\n \n func main() {\n \tfor _, url := range os.Args[1:] {\n-\t\tif url[:7]\n+\t\tif url[:7] != \"htt\"\n \t\tresp, err := http.Get(url)\n \t\tif err != nil {\n \t\t\tfmt.Fprintf(os.Stderr, \"fetch: %v\\n\", err)\n \t\t\tos.Exit(1)\n"
+                },
+                {
+                    "date": 1711538854323,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -15,9 +15,11 @@\n )\n \n func main() {\n \tfor _, url := range os.Args[1:] {\n-\t\tif url[:7] != \"htt\"\n+\t\tif url[:7] != \"http://\" {\n+\t\t\turl = \"http://\" + url\n+\t\t}\n \t\tresp, err := http.Get(url)\n \t\tif err != nil {\n \t\t\tfmt.Fprintf(os.Stderr, \"fetch: %v\\n\", err)\n \t\t\tos.Exit(1)\n"
+                },
+                {
+                    "date": 1711538888968,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -15,9 +15,9 @@\n )\n \n func main() {\n \tfor _, url := range os.Args[1:] {\n-\t\tif url[:7] != \"http://\" {\n+\t\tif  {\n \t\t\turl = \"http://\" + url\n \t\t}\n \t\tresp, err := http.Get(url)\n \t\tif err != nil {\n"
+                },
+                {
+                    "date": 1711538896506,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -15,9 +15,9 @@\n )\n \n func main() {\n \tfor _, url := range os.Args[1:] {\n-\t\tif  {\n+\t\tif url {\n \t\t\turl = \"http://\" + url\n \t\t}\n \t\tresp, err := http.Get(url)\n \t\tif err != nil {\n"
+                },
+                {
+                    "date": 1711538945162,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -15,9 +15,9 @@\n )\n \n func main() {\n \tfor _, url := range os.Args[1:] {\n-\t\tif url {\n+\t\tif str {\n \t\t\turl = \"http://\" + url\n \t\t}\n \t\tresp, err := http.Get(url)\n \t\tif err != nil {\n"
+                },
+                {
+                    "date": 1711538952859,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -11,13 +11,14 @@\n \t\"fmt\"\n \t\"io\"\n \t\"net/http\"\n \t\"os\"\n+\t\"strings\"\n )\n \n func main() {\n \tfor _, url := range os.Args[1:] {\n-\t\tif str {\n+\t\tif strings.HasPrefix(url, ) {\n \t\t\turl = \"http://\" + url\n \t\t}\n \t\tresp, err := http.Get(url)\n \t\tif err != nil {\n"
+                },
+                {
+                    "date": 1711538958114,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -16,9 +16,9 @@\n )\n \n func main() {\n \tfor _, url := range os.Args[1:] {\n-\t\tif strings.HasPrefix(url, ) {\n+\t\tif strings.HasPrefix(url, \"http://\") == false {\n \t\t\turl = \"http://\" + url\n \t\t}\n \t\tresp, err := http.Get(url)\n \t\tif err != nil {\n"
+                },
+                {
+                    "date": 1711538965272,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -16,9 +16,9 @@\n )\n \n func main() {\n \tfor _, url := range os.Args[1:] {\n-\t\tif strings.HasPrefix(url, \"http://\") == false {\n+\t\tif strings.HasPrefix(url, \"http://\"){\n \t\t\turl = \"http://\" + url\n \t\t}\n \t\tresp, err := http.Get(url)\n \t\tif err != nil {\n"
+                },
+                {
+                    "date": 1711539014775,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -16,9 +16,9 @@\n )\n \n func main() {\n \tfor _, url := range os.Args[1:] {\n-\t\tif strings.HasPrefix(url, \"http://\"){\n+\t\tif !strings.HasPrefix(url, \"http://\") {\n \t\t\turl = \"http://\" + url\n \t\t}\n \t\tresp, err := http.Get(url)\n \t\tif err != nil {\n@@ -35,9 +35,9 @@\n \t\tif err != nil {\n \t\t\tfmt.Fprintf(os.Stderr, \"fetch: reading %s: %v\\n\", url, err)\n \t\t\tos.Exit(1)\n \t\t}\n-\t\tfmt.Printf(\"%s\\n%v\", dst, b)\n+\t\tfmt.Printf(\"%s\\n%v\\n\", dst, b)\n \t}\n }\n \n //!-\n"
+                },
+                {
+                    "date": 1711539022907,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -35,9 +35,9 @@\n \t\tif err != nil {\n \t\t\tfmt.Fprintf(os.Stderr, \"fetch: reading %s: %v\\n\", url, err)\n \t\t\tos.Exit(1)\n \t\t}\n-\t\tfmt.Printf(\"%s\\n%v\\n\", dst, b)\n+\t\tfmt.Printf(\"%s\\n%v\\n\", dst, b, res)\n \t}\n }\n \n //!-\n"
+                },
+                {
+                    "date": 1711539030413,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -35,9 +35,9 @@\n \t\tif err != nil {\n \t\t\tfmt.Fprintf(os.Stderr, \"fetch: reading %s: %v\\n\", url, err)\n \t\t\tos.Exit(1)\n \t\t}\n-\t\tfmt.Printf(\"%s\\n%v\\n\", dst, b, res)\n+\t\tfmt.Printf(\"%s\\n%v\\n%\", dst, b, resp.Status)\n \t}\n }\n \n //!-\n"
+                },
+                {
+                    "date": 1711540433995,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -35,9 +35,9 @@\n \t\tif err != nil {\n \t\t\tfmt.Fprintf(os.Stderr, \"fetch: reading %s: %v\\n\", url, err)\n \t\t\tos.Exit(1)\n \t\t}\n-\t\tfmt.Printf(\"%s\\n%v\\n%\", dst, b, resp.Status)\n+\t\tfmt.Printf(\"%s\\n%v\\n%q\", dst, b, resp.Status)\n \t}\n }\n \n //!-\n"
+                }
+            ],
+            "date": 1711538221246,
+            "name": "Commit-0",
+            "content": "// Copyright © 2016 Alan A. A. Donovan & Brian W. Kernighan.\n// License: https://creativecommons.org/licenses/by-nc-sa/4.0/\n\n// See page 16.\n//!+\n\n// Fetch prints the content found at each specified URL.\npackage main\n\nimport (\n\t\"fmt\"\n\t\"io/ioutil\"\n\t\"net/http\"\n\t\"os\"\n)\n\nfunc main() {\n\tfor _, url := range os.Args[1:] {\n\t\tresp, err := http.Get(url)\n\t\tif err != nil {\n\t\t\tfmt.Fprintf(os.Stderr, \"fetch: %v\\n\", err)\n\t\t\tos.Exit(1)\n\t\t}\n\t\tb, err := ioutil.ReadAll(resp.Body)\n\t\tresp.Body.Close()\n\t\tif err != nil {\n\t\t\tfmt.Fprintf(os.Stderr, \"fetch: reading %s: %v\\n\", url, err)\n\t\t\tos.Exit(1)\n\t\t}\n\t\tfmt.Printf(\"%s\", b)\n\t}\n}\n\n//!-\n"
+        }
+    ]
+}

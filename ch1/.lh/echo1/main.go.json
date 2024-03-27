@@ -1,0 +1,102 @@
+{
+    "sourceFile": "echo1/main.go",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 21,
+            "patches": [
+                {
+                    "date": 1711534779652,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1711534786229,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -9,12 +9,13 @@\n \n import (\n \t\"fmt\"\n \t\"os\"\n+\t\"time\"\n )\n \n func main() {\n-\tstart := time\n+\tstart := time.New\n \tvar s, sep string\n \tfor i := 1; i < len(os.Args); i++ {\n \t\ts += sep + os.Args[i]\n \t\tsep = \" \"\n"
+                },
+                {
+                    "date": 1711534792665,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -13,14 +13,15 @@\n \t\"time\"\n )\n \n func main() {\n-\tstart := time.New\n+\tstart := time.NewTimer(0)\n \tvar s, sep string\n \tfor i := 1; i < len(os.Args); i++ {\n \t\ts += sep + os.Args[i]\n \t\tsep = \" \"\n \t}\n+\t\n \tfmt.Println(s)\n }\n \n //!-\n"
+                },
+                {
+                    "date": 1711534808110,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -13,15 +13,15 @@\n \t\"time\"\n )\n \n func main() {\n-\tstart := time.NewTimer(0)\n+\tstart := time.Ne\n \tvar s, sep string\n \tfor i := 1; i < len(os.Args); i++ {\n \t\ts += sep + os.Args[i]\n \t\tsep = \" \"\n \t}\n-\t\n+\n \tfmt.Println(s)\n }\n \n //!-\n"
+                },
+                {
+                    "date": 1711534828773,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -13,15 +13,16 @@\n \t\"time\"\n )\n \n func main() {\n-\tstart := time.Ne\n+\tstart := time.Now()\n \tvar s, sep string\n \tfor i := 1; i < len(os.Args); i++ {\n \t\ts += sep + os.Args[i]\n \t\tsep = \" \"\n \t}\n \n \tfmt.Println(s)\n+\tfmt.P\n }\n \n //!-\n"
+                },
+                {
+                    "date": 1711534833930,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -21,8 +21,8 @@\n \t\tsep = \" \"\n \t}\n \n \tfmt.Println(s)\n-\tfmt.P\n+\tfmt.Printf(\"%\")\n }\n \n //!-\n"
+                },
+                {
+                    "date": 1711534840261,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -21,8 +21,8 @@\n \t\tsep = \" \"\n \t}\n \n \tfmt.Println(s)\n-\tfmt.Printf(\"%\")\n+\tfmt.Printf(\"%.2fs el\")\n }\n \n //!-\n"
+                },
+                {
+                    "date": 1711534847580,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -21,8 +21,8 @@\n \t\tsep = \" \"\n \t}\n \n \tfmt.Println(s)\n-\tfmt.Printf(\"%.2fs el\")\n+\tfmt.Printf(\"%.2fs elapsed\\n\", tim)\n }\n \n //!-\n"
+                },
+                {
+                    "date": 1711534853920,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -21,8 +21,8 @@\n \t\tsep = \" \"\n \t}\n \n \tfmt.Println(s)\n-\tfmt.Printf(\"%.2fs elapsed\\n\", tim)\n+\tfmt.Printf(\"%.2fs elapsed\\n\", time.Sin)\n }\n \n //!-\n"
+                },
+                {
+                    "date": 1711534859952,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -21,8 +21,8 @@\n \t\tsep = \" \"\n \t}\n \n \tfmt.Println(s)\n-\tfmt.Printf(\"%.2fs elapsed\\n\", time.Sin)\n+\tfmt.Printf(\"%.2fs elapsed\\n\", time.Since(start).Seconds())\n }\n \n //!-\n"
+                },
+                {
+                    "date": 1711534905928,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -21,8 +21,8 @@\n \t\tsep = \" \"\n \t}\n \n \tfmt.Println(s)\n-\tfmt.Printf(\"%.2fs elapsed\\n\", time.Since(start).Seconds())\n+\tfmt.Printf(\"%.2fs elapsed\\n\", time.Since(start)())\n }\n \n //!-\n"
+                },
+                {
+                    "date": 1711534951133,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -21,8 +21,8 @@\n \t\tsep = \" \"\n \t}\n \n \tfmt.Println(s)\n-\tfmt.Printf(\"%.2fs elapsed\\n\", time.Since(start)())\n+\tfmt.Printf(\"%.2fs elapsed\\n\", time.Since(start).Microseconds())\n }\n \n //!-\n"
+                },
+                {
+                    "date": 1711534974183,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -12,17 +12,8 @@\n \t\"os\"\n \t\"time\"\n )\n \n-func main() {\n-\tstart := time.Now()\n-\tvar s, sep string\n-\tfor i := 1; i < len(os.Args); i++ {\n-\t\ts += sep + os.Args[i]\n-\t\tsep = \" \"\n-\t}\n+elapsed := float64(time.Since(start).Microseconds()) / 1000000\n+fmt.Printf(\"%.2fs elapsed\\n\", elapsed)\n \n-\tfmt.Println(s)\n-\tfmt.Printf(\"%.2fs elapsed\\n\", time.Since(start).Microseconds())\n-}\n-\n //!-\n"
+                },
+                {
+                    "date": 1711534985420,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -12,8 +12,17 @@\n \t\"os\"\n \t\"time\"\n )\n \n-elapsed := float64(time.Since(start).Microseconds()) / 1000000\n-fmt.Printf(\"%.2fs elapsed\\n\", elapsed)\n+func main() {\n+\tstart := time.Now()\n+\tvar s, sep string\n+\tfor i := 1; i < len(os.Args); i++ {\n+\t\ts += sep + os.Args[i]\n+\t\tsep = \" \"\n+\t}\n \n+\tfmt.Println(s)\n+\tfmt.Printf(\"%.2fs elapsed\\n\", time.Since(start).Microseconds())\n+}\n+\n //!-\n"
+                },
+                {
+                    "date": 1711534991634,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -21,8 +21,8 @@\n \t\tsep = \" \"\n \t}\n \n \tfmt.Println(s)\n-\tfmt.Printf(\"%.2fs elapsed\\n\", time.Since(start).Microseconds())\n+\tfmt.Printf(\"%.2fs elapsed\\n\", time.Since(start).Milliseconds())\n }\n \n //!-\n"
+                },
+                {
+                    "date": 1711534998026,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -21,8 +21,8 @@\n \t\tsep = \" \"\n \t}\n \n \tfmt.Println(s)\n-\tfmt.Printf(\"%.2fs elapsed\\n\", time.Since(start).Milliseconds())\n+\tfmt.Printf(\"%.2fs elapsed\\n\", time.Since(start).Milliseconds()/100)\n }\n \n //!-\n"
+                },
+                {
+                    "date": 1711535008722,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -21,8 +21,8 @@\n \t\tsep = \" \"\n \t}\n \n \tfmt.Println(s)\n-\tfmt.Printf(\"%.2fs elapsed\\n\", time.Since(start).Milliseconds()/100)\n+\tfmt.Printf(\"%vs elapsed\\n\", time.Since(start).Milliseconds()/100)\n }\n \n //!-\n"
+                },
+                {
+                    "date": 1711535016703,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -21,8 +21,8 @@\n \t\tsep = \" \"\n \t}\n \n \tfmt.Println(s)\n-\tfmt.Printf(\"%vs elapsed\\n\", time.Since(start).Milliseconds()/100)\n+\tfmt.Printf(\"%qs elapsed\\n\", time.Since(start).Milliseconds()/100)\n }\n \n //!-\n"
+                },
+                {
+                    "date": 1711535024171,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -21,8 +21,8 @@\n \t\tsep = \" \"\n \t}\n \n \tfmt.Println(s)\n-\tfmt.Printf(\"%qs elapsed\\n\", time.Since(start).Milliseconds()/100)\n+\tfmt.Printf(\"%vs elapsed\\n\", time.Since(start).Milliseconds())\n }\n \n //!-\n"
+                },
+                {
+                    "date": 1711535069994,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -21,8 +21,8 @@\n \t\tsep = \" \"\n \t}\n \n \tfmt.Println(s)\n-\tfmt.Printf(\"%vs elapsed\\n\", time.Since(start).Milliseconds())\n+\tfmt.Printf(\"% elapsed\\n\", time.Since(start).Milliseconds())\n }\n \n //!-\n"
+                },
+                {
+                    "date": 1711535083014,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -21,8 +21,8 @@\n \t\tsep = \" \"\n \t}\n \n \tfmt.Println(s)\n-\tfmt.Printf(\"% elapsed\\n\", time.Since(start).Milliseconds())\n+\tfmt.Printf(\"%.2f elapsed\\n\", (time.Since(start).Milliseconds())\n }\n \n //!-\n"
+                },
+                {
+                    "date": 1711535088544,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -21,8 +21,8 @@\n \t\tsep = \" \"\n \t}\n \n \tfmt.Println(s)\n-\tfmt.Printf(\"%.2f elapsed\\n\", flo(time.Since(start).Milliseconds()))\n+\tfmt.Printf(\"%.2f elapsed\\n\", float64(time.Since(start).Milliseconds()))\n }\n \n //!-\n"
+                }
+            ],
+            "date": 1711534779652,
+            "name": "Commit-0",
+            "content": "// Copyright © 2016 Alan A. A. Donovan & Brian W. Kernighan.\n// License: https://creativecommons.org/licenses/by-nc-sa/4.0/\n\n// See page 4.\n//!+\n\n// Echo1 prints its command-line arguments.\npackage main\n\nimport (\n\t\"fmt\"\n\t\"os\"\n)\n\nfunc main() {\n\tstart := time\n\tvar s, sep string\n\tfor i := 1; i < len(os.Args); i++ {\n\t\ts += sep + os.Args[i]\n\t\tsep = \" \"\n\t}\n\tfmt.Println(s)\n}\n\n//!-\n"
+        }
+    ]
+}

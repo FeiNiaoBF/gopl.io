@@ -1,0 +1,102 @@
+{
+    "sourceFile": "dup2/main.go",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 21,
+            "patches": [
+                {
+                    "date": 1711536961591,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1711536970887,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -26,9 +26,9 @@\n \t\t\t\tfmt.Fprintf(os.Stderr, \"dup2: %v\\n\", err)\n \t\t\t\tcontinue\n \t\t\t}\n \t\t\tcountLines(f, counts)\n-\t\t\t// f.Close()\n+\t\t\tf.Close()\n \t\t}\n \t}\n \tfor line, n := range counts {\n \t\tif n > 1 {\n"
+                },
+                {
+                    "date": 1711537074248,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -26,9 +26,9 @@\n \t\t\t\tfmt.Fprintf(os.Stderr, \"dup2: %v\\n\", err)\n \t\t\t\tcontinue\n \t\t\t}\n \t\t\tcountLines(f, counts)\n-\t\t\tf.Close()\n+\t\t\t// f.Close()\n \t\t}\n \t}\n \tfor line, n := range counts {\n \t\tif n > 1 {\n"
+                },
+                {
+                    "date": 1711537142751,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -26,9 +26,9 @@\n \t\t\t\tfmt.Fprintf(os.Stderr, \"dup2: %v\\n\", err)\n \t\t\t\tcontinue\n \t\t\t}\n \t\t\tcountLines(f, counts)\n-\t\t\t// f.Close()\n+\t\t\tf.Close()\n \t\t}\n \t}\n \tfor line, n := range counts {\n \t\tif n > 1 {\n"
+                },
+                {
+                    "date": 1711537322559,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -13,8 +13,9 @@\n \t\"fmt\"\n \t\"os\"\n )\n \n+\n func main() {\n \tcounts := make(map[string]int)\n \tfiles := os.Args[1:]\n \tif len(files) == 0 {\n"
+                },
+                {
+                    "date": 1711537333897,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -13,8 +13,9 @@\n \t\"fmt\"\n \t\"os\"\n )\n \n+type Line str\n \n func main() {\n \tcounts := make(map[string]int)\n \tfiles := os.Args[1:]\n"
+                },
+                {
+                    "date": 1711537344073,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -13,9 +13,12 @@\n \t\"fmt\"\n \t\"os\"\n )\n \n-type Line str\n+type Line struct {\n+\tCount int\n+\tName \n+}\n \n func main() {\n \tcounts := make(map[string]int)\n \tfiles := os.Args[1:]\n"
+                },
+                {
+                    "date": 1711537349464,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -15,13 +15,13 @@\n )\n \n type Line struct {\n \tCount int\n-\tName \n+\tName  string\n }\n \n func main() {\n-\tcounts := make(map[string]int)\n+\tcounts := make(map[string]Line)\n \tfiles := os.Args[1:]\n \tif len(files) == 0 {\n \t\tcountLines(os.Stdin, counts)\n \t} else {\n"
+                },
+                {
+                    "date": 1711537357644,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -41,9 +41,9 @@\n \t\t}\n \t}\n }\n \n-func countLines(f *os.File, counts map[string]int) {\n+func countLines(f *os.File, counts map[string]Line) {\n \tinput := bufio.NewScanner(f)\n \tfor input.Scan() {\n \t\tcounts[input.Text()]++\n \t}\n"
+                },
+                {
+                    "date": 1711537364355,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -44,9 +44,11 @@\n \n func countLines(f *os.File, counts map[string]Line) {\n \tinput := bufio.NewScanner(f)\n \tfor input.Scan() {\n-\t\tcounts[input.Text()]++\n+\t\tcounts[input.Text()] = {\n+\t\t\t\n+\t\t}\n \t}\n \t// NOTE: ignoring potential errors from input.Err()\n }\n \n"
+                },
+                {
+                    "date": 1711537375326,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -44,11 +44,9 @@\n \n func countLines(f *os.File, counts map[string]Line) {\n \tinput := bufio.NewScanner(f)\n \tfor input.Scan() {\n-\t\tcounts[input.Text()] = {\n-\t\t\t\n-\t\t}\n+\t\t\n \t}\n \t// NOTE: ignoring potential errors from input.Err()\n }\n \n"
+                },
+                {
+                    "date": 1711537410765,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -35,18 +35,18 @@\n \t\t\tf.Close()\n \t\t}\n \t}\n \tfor line, n := range counts {\n-\t\tif n > 1 {\n+\t\tif n >  {\n \t\t\tfmt.Printf(\"%d\\t%s\\n\", n, line)\n \t\t}\n \t}\n }\n \n func countLines(f *os.File, counts map[string]Line) {\n \tinput := bufio.NewScanner(f)\n \tfor input.Scan() {\n-\t\t\n+\t\tcounts[input.Text()] = Line{counts[input.Text()].Count + 1, f.Name()}\n \t}\n \t// NOTE: ignoring potential errors from input.Err()\n }\n \n"
+                },
+                {
+                    "date": 1711537417783,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -35,9 +35,9 @@\n \t\t\tf.Close()\n \t\t}\n \t}\n \tfor line, n := range counts {\n-\t\tif n >  {\n+\t\tif  >  {\n \t\t\tfmt.Printf(\"%d\\t%s\\n\", n, line)\n \t\t}\n \t}\n }\n"
+                },
+                {
+                    "date": 1711537425728,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -34,9 +34,9 @@\n \t\t\tcountLines(f, counts)\n \t\t\tf.Close()\n \t\t}\n \t}\n-\tfor line, n := range counts {\n+\tfor val, n := range counts {\n \t\tif  >  {\n \t\t\tfmt.Printf(\"%d\\t%s\\n\", n, line)\n \t\t}\n \t}\n"
+                },
+                {
+                    "date": 1711537431110,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -35,9 +35,9 @@\n \t\t\tf.Close()\n \t\t}\n \t}\n \tfor val, n := range counts {\n-\t\tif  >  {\n+\t\tif n.Count >  {\n \t\t\tfmt.Printf(\"%d\\t%s\\n\", n, line)\n \t\t}\n \t}\n }\n"
+                },
+                {
+                    "date": 1711537436819,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -35,10 +35,10 @@\n \t\t\tf.Close()\n \t\t}\n \t}\n \tfor val, n := range counts {\n-\t\tif n.Count >  {\n-\t\t\tfmt.Printf(\"%d\\t%s\\n\", n, line)\n+\t\tif n.Count > 1 {\n+\t\t\tfmt.Printf(\"%d\\t%s\\n\", )\n \t\t}\n \t}\n }\n \n"
+                },
+                {
+                    "date": 1711537458687,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -35,10 +35,11 @@\n \t\t\tf.Close()\n \t\t}\n \t}\n \tfor val, n := range counts {\n+\t\t\n \t\tif n.Count > 1 {\n-\t\t\tfmt.Printf(\"%d\\t%s\\n\", )\n+\t\t\tfmt.Printf(\"%d\\t%s\\n\", n.Count, val)\n \t\t}\n \t}\n }\n \n"
+                },
+                {
+                    "date": 1711537464919,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -35,9 +35,9 @@\n \t\t\tf.Close()\n \t\t}\n \t}\n \tfor val, n := range counts {\n-\t\t\n+\t\tfmt.Printf(\"In \")\n \t\tif n.Count > 1 {\n \t\t\tfmt.Printf(\"%d\\t%s\\n\", n.Count, val)\n \t\t}\n \t}\n"
+                },
+                {
+                    "date": 1711537504423,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -35,9 +35,8 @@\n \t\t\tf.Close()\n \t\t}\n \t}\n \tfor val, n := range counts {\n-\t\tfmt.Printf(\"In \")\n \t\tif n.Count > 1 {\n \t\t\tfmt.Printf(\"%d\\t%s\\n\", n.Count, val)\n \t\t}\n \t}\n"
+                },
+                {
+                    "date": 1711537513836,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -36,9 +36,9 @@\n \t\t}\n \t}\n \tfor val, n := range counts {\n \t\tif n.Count > 1 {\n-\t\t\tfmt.Printf(\"%d\\t%s\\n\", n.Count, val)\n+\t\t\tfmt.Printf(\"%d\\t%s\\tIn file \\n\", n.Count, val)\n \t\t}\n \t}\n }\n \n"
+                },
+                {
+                    "date": 1711537524208,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -36,9 +36,9 @@\n \t\t}\n \t}\n \tfor val, n := range counts {\n \t\tif n.Count > 1 {\n-\t\t\tfmt.Printf(\"%d\\t%s\\tIn file \\n\", n.Count, val)\n+\t\t\tfmt.Printf(\"%d\\t%s\\tIn file %v\\n\", n.Count, val, )\n \t\t}\n \t}\n }\n \n"
+                },
+                {
+                    "date": 1711537531848,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -36,9 +36,9 @@\n \t\t}\n \t}\n \tfor val, n := range counts {\n \t\tif n.Count > 1 {\n-\t\t\tfmt.Printf(\"%d\\t%s\\tIn file %v\\n\", n.Count, val, )\n+\t\t\tfmt.Printf(\"%d\\t%s\\tIn file %v\\n\", n.Count, val, n.Name)\n \t\t}\n \t}\n }\n \n"
+                }
+            ],
+            "date": 1711536961591,
+            "name": "Commit-0",
+            "content": "// Copyright © 2016 Alan A. A. Donovan & Brian W. Kernighan.\n// License: https://creativecommons.org/licenses/by-nc-sa/4.0/\n\n// See page 10.\n//!+\n\n// Dup2 prints the count and text of lines that appear more than once\n// in the input.  It reads from stdin or from a list of named files.\npackage main\n\nimport (\n\t\"bufio\"\n\t\"fmt\"\n\t\"os\"\n)\n\nfunc main() {\n\tcounts := make(map[string]int)\n\tfiles := os.Args[1:]\n\tif len(files) == 0 {\n\t\tcountLines(os.Stdin, counts)\n\t} else {\n\t\tfor _, arg := range files {\n\t\t\tf, err := os.Open(arg)\n\t\t\tif err != nil {\n\t\t\t\tfmt.Fprintf(os.Stderr, \"dup2: %v\\n\", err)\n\t\t\t\tcontinue\n\t\t\t}\n\t\t\tcountLines(f, counts)\n\t\t\t// f.Close()\n\t\t}\n\t}\n\tfor line, n := range counts {\n\t\tif n > 1 {\n\t\t\tfmt.Printf(\"%d\\t%s\\n\", n, line)\n\t\t}\n\t}\n}\n\nfunc countLines(f *os.File, counts map[string]int) {\n\tinput := bufio.NewScanner(f)\n\tfor input.Scan() {\n\t\tcounts[input.Text()]++\n\t}\n\t// NOTE: ignoring potential errors from input.Err()\n}\n\n//!-\n"
+        }
+    ]
+}

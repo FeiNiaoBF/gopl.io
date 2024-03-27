@@ -1,0 +1,194 @@
+{
+    "sourceFile": "fetchall/main.go",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 44,
+            "patches": [
+                {
+                    "date": 1711539439129,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1711539452555,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -27,9 +27,9 @@\n \t}\n \tfmt.Printf(\"%.2fs elapsed\\n\", time.Since(start).Seconds())\n }\n \n-func fetch(url string, ch chan) {\n+func fetch(url string, ch string < ) {\n \tstart := time.Now()\n \tresp, err := http.Get(url)\n \tif err != nil {\n \t\tch <- fmt.Sprint(err) // send to channel ch\n"
+                },
+                {
+                    "date": 1711539461255,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -27,9 +27,9 @@\n \t}\n \tfmt.Printf(\"%.2fs elapsed\\n\", time.Since(start).Seconds())\n }\n \n-func fetch(url string, ch string < ) {\n+func fetch(url string, ch chan) {\n \tstart := time.Now()\n \tresp, err := http.Get(url)\n \tif err != nil {\n \t\tch <- fmt.Sprint(err) // send to channel ch\n"
+                },
+                {
+                    "date": 1711539467410,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -27,9 +27,9 @@\n \t}\n \tfmt.Printf(\"%.2fs elapsed\\n\", time.Since(start).Seconds())\n }\n \n-func fetch(url string, ch chan) {\n+func fetch(url string, ch chan < string) {\n \tstart := time.Now()\n \tresp, err := http.Get(url)\n \tif err != nil {\n \t\tch <- fmt.Sprint(err) // send to channel ch\n"
+                },
+                {
+                    "date": 1711539473539,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -27,9 +27,9 @@\n \t}\n \tfmt.Printf(\"%.2fs elapsed\\n\", time.Since(start).Seconds())\n }\n \n-func fetch(url string, ch chan < string) {\n+func fetch(url string, ch chan<- string) {\n \tstart := time.Now()\n \tresp, err := http.Get(url)\n \tif err != nil {\n \t\tch <- fmt.Sprint(err) // send to channel ch\n"
+                },
+                {
+                    "date": 1711539480045,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -27,9 +27,9 @@\n \t}\n \tfmt.Printf(\"%.2fs elapsed\\n\", time.Since(start).Seconds())\n }\n \n-func fetch(url string, ch chan<- string) {\n+func fetch(url string, ch tring<-chan s) {\n \tstart := time.Now()\n \tresp, err := http.Get(url)\n \tif err != nil {\n \t\tch <- fmt.Sprint(err) // send to channel ch\n"
+                },
+                {
+                    "date": 1711539491776,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -27,9 +27,9 @@\n \t}\n \tfmt.Printf(\"%.2fs elapsed\\n\", time.Since(start).Seconds())\n }\n \n-func fetch(url string, ch tring<-chan s) {\n+func fetch(url string, ch chan<- string) {\n \tstart := time.Now()\n \tresp, err := http.Get(url)\n \tif err != nil {\n \t\tch <- fmt.Sprint(err) // send to channel ch\n"
+                },
+                {
+                    "date": 1711539624816,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -24,8 +24,9 @@\n \t}\n \tfor range os.Args[1:] {\n \t\tfmt.Println(<-ch) // receive from channel ch\n \t}\n+\t\n \tfmt.Printf(\"%.2fs elapsed\\n\", time.Since(start).Seconds())\n }\n \n func fetch(url string, ch chan<- string) {\n"
+                },
+                {
+                    "date": 1711539635058,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -24,9 +24,9 @@\n \t}\n \tfor range os.Args[1:] {\n \t\tfmt.Println(<-ch) // receive from channel ch\n \t}\n-\t\n+\tfor _, url := \n \tfmt.Printf(\"%.2fs elapsed\\n\", time.Since(start).Seconds())\n }\n \n func fetch(url string, ch chan<- string) {\n"
+                },
+                {
+                    "date": 1711539644205,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -24,9 +24,9 @@\n \t}\n \tfor range os.Args[1:] {\n \t\tfmt.Println(<-ch) // receive from channel ch\n \t}\n-\tfor _, url := \n+\tfor _, url := range os.Args[1:]\n \tfmt.Printf(\"%.2fs elapsed\\n\", time.Since(start).Seconds())\n }\n \n func fetch(url string, ch chan<- string) {\n"
+                },
+                {
+                    "date": 1711539655042,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -24,9 +24,31 @@\n \t}\n \tfor range os.Args[1:] {\n \t\tfmt.Println(<-ch) // receive from channel ch\n \t}\n-\tfor _, url := range os.Args[1:]\n+\tfor _, url := range os.Args[1:] {\n+\t\tif !strings.HasPrefix(url, \"http://\") {\n+\t\t\turl = \"http://\" + url\n+\t\t}\n+\t\tresp, err := http.Get(url)\n+\t\tif err != nil {\n+\t\t\tfmt.Fprintf(os.Stderr, \"fetch: %v\\n\", err)\n+\t\t\tos.Exit(1)\n+\t\t}\n+\t\tdst := os.Stdout\n+\t\tb, err := io.Copy(dst, resp.Body)\n+\t\tif err != nil {\n+\t\t\tfmt.Fprintf(os.Stderr, \"fetch: reading %s: %v\\n\", url, err)\n+\t\t\tos.Exit(1)\n+\t\t}\n+\t\tresp.Body.Close()\n+\t\tif err != nil {\n+\t\t\tfmt.Fprintf(os.Stderr, \"fetch: reading %s: %v\\n\", url, err)\n+\t\t\tos.Exit(1)\n+\t\t}\n+\t\tfmt.Printf(\"%q\\n%v\\n%q\", dst, b, resp.Status)\n+\n+\t}\n \tfmt.Printf(\"%.2fs elapsed\\n\", time.Since(start).Seconds())\n }\n \n func fetch(url string, ch chan<- string) {\n"
+                },
+                {
+                    "date": 1711539661307,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -25,11 +25,9 @@\n \tfor range os.Args[1:] {\n \t\tfmt.Println(<-ch) // receive from channel ch\n \t}\n \tfor _, url := range os.Args[1:] {\n-\t\tif !strings.HasPrefix(url, \"http://\") {\n-\t\t\turl = \"http://\" + url\n-\t\t}\n+\n \t\tresp, err := http.Get(url)\n \t\tif err != nil {\n \t\t\tfmt.Fprintf(os.Stderr, \"fetch: %v\\n\", err)\n \t\t\tos.Exit(1)\n"
+                },
+                {
+                    "date": 1711539667291,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -12,22 +12,28 @@\n \t\"io\"\n \t\"io/ioutil\"\n \t\"net/http\"\n \t\"os\"\n+\t\"strings\"\n \t\"time\"\n )\n \n func main() {\n \tstart := time.Now()\n \tch := make(chan string)\n \tfor _, url := range os.Args[1:] {\n+\t\tif !strings.HasPrefix(url, \"http://\") {\n+\t\t\turl = \"http://\" + url\n+\t\t}\n \t\tgo fetch(url, ch) // start a goroutine\n \t}\n \tfor range os.Args[1:] {\n \t\tfmt.Println(<-ch) // receive from channel ch\n \t}\n \tfor _, url := range os.Args[1:] {\n-\n+\t\tif !strings.HasPrefix(url, \"http://\") {\n+\t\t\turl = \"http://\" + url\n+\t\t}\n \t\tresp, err := http.Get(url)\n \t\tif err != nil {\n \t\t\tfmt.Fprintf(os.Stderr, \"fetch: %v\\n\", err)\n \t\t\tos.Exit(1)\n"
+                },
+                {
+                    "date": 1711539690161,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -48,9 +48,9 @@\n \t\tif err != nil {\n \t\t\tfmt.Fprintf(os.Stderr, \"fetch: reading %s: %v\\n\", url, err)\n \t\t\tos.Exit(1)\n \t\t}\n-\t\tfmt.Printf(\"%q\\n%v\\n%q\", dst, b, resp.Status)\n+\t\tfmt.Sprintf(\"%.2fs  %7d  %s\", secs, nbytes, url)\n \n \t}\n \tfmt.Printf(\"%.2fs elapsed\\n\", time.Since(start).Seconds())\n }\n"
+                },
+                {
+                    "date": 1711539706690,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -28,31 +28,9 @@\n \t}\n \tfor range os.Args[1:] {\n \t\tfmt.Println(<-ch) // receive from channel ch\n \t}\n-\tfor _, url := range os.Args[1:] {\n-\t\tif !strings.HasPrefix(url, \"http://\") {\n-\t\t\turl = \"http://\" + url\n-\t\t}\n-\t\tresp, err := http.Get(url)\n-\t\tif err != nil {\n-\t\t\tfmt.Fprintf(os.Stderr, \"fetch: %v\\n\", err)\n-\t\t\tos.Exit(1)\n-\t\t}\n-\t\tdst := os.Stdout\n-\t\tb, err := io.Copy(dst, resp.Body)\n-\t\tif err != nil {\n-\t\t\tfmt.Fprintf(os.Stderr, \"fetch: reading %s: %v\\n\", url, err)\n-\t\t\tos.Exit(1)\n-\t\t}\n-\t\tresp.Body.Close()\n-\t\tif err != nil {\n-\t\t\tfmt.Fprintf(os.Stderr, \"fetch: reading %s: %v\\n\", url, err)\n-\t\t\tos.Exit(1)\n-\t\t}\n-\t\tfmt.Sprintf(\"%.2fs  %7d  %s\", secs, nbytes, url)\n-\n-\t}\n+\t\n \tfmt.Printf(\"%.2fs elapsed\\n\", time.Since(start).Seconds())\n }\n \n func fetch(url string, ch chan<- string) {\n"
+                },
+                {
+                    "date": 1711539717375,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -28,9 +28,9 @@\n \t}\n \tfor range os.Args[1:] {\n \t\tfmt.Println(<-ch) // receive from channel ch\n \t}\n-\t\n+\tfor _, url := range \n \tfmt.Printf(\"%.2fs elapsed\\n\", time.Since(start).Seconds())\n }\n \n func fetch(url string, ch chan<- string) {\n"
+                },
+                {
+                    "date": 1711539722503,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -28,9 +28,11 @@\n \t}\n \tfor range os.Args[1:] {\n \t\tfmt.Println(<-ch) // receive from channel ch\n \t}\n-\tfor _, url := range \n+\tfor _, url := range os.Args[1:] {\n+\t\t\n+\t}\n \tfmt.Printf(\"%.2fs elapsed\\n\", time.Since(start).Seconds())\n }\n \n func fetch(url string, ch chan<- string) {\n"
+                },
+                {
+                    "date": 1711539732977,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -29,9 +29,9 @@\n \tfor range os.Args[1:] {\n \t\tfmt.Println(<-ch) // receive from channel ch\n \t}\n \tfor _, url := range os.Args[1:] {\n-\t\t\n+\n \t}\n \tfmt.Printf(\"%.2fs elapsed\\n\", time.Since(start).Seconds())\n }\n \n@@ -53,4 +53,6 @@\n \tch <- fmt.Sprintf(\"%.2fs  %7d  %s\", secs, nbytes, url)\n }\n \n //!-\n+\n+func \n"
+                },
+                {
+                    "date": 1711539742315,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -54,5 +54,5 @@\n }\n \n //!-\n \n-func \n+func fetchB\n"
+                },
+                {
+                    "date": 1711539747619,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -54,5 +54,7 @@\n }\n \n //!-\n \n-func fetchB\n+func fetchBuffer() {\n+\t\n+}\n"
+                },
+                {
+                    "date": 1711539755251,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -54,7 +54,7 @@\n }\n \n //!-\n \n-func fetchBuffer() {\n-\t\n+func fetchBuffer(url string, ) {\n+\n }\n"
+                },
+                {
+                    "date": 1711539760552,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -54,7 +54,7 @@\n }\n \n //!-\n \n-func fetchBuffer(url string, ) {\n+func fetchBuffer(url string) {\n \n }\n"
+                },
+                {
+                    "date": 1711539766523,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -29,9 +29,8 @@\n \tfor range os.Args[1:] {\n \t\tfmt.Println(<-ch) // receive from channel ch\n \t}\n \tfor _, url := range os.Args[1:] {\n-\n \t}\n \tfmt.Printf(\"%.2fs elapsed\\n\", time.Since(start).Seconds())\n }\n \n@@ -55,6 +54,28 @@\n \n //!-\n \n func fetchBuffer(url string) {\n+\tfor _, url := range os.Args[1:] {\n+\t\tif !strings.HasPrefix(url, \"http://\") {\n+\t\t\turl = \"http://\" + url\n+\t\t}\n+\t\tresp, err := http.Get(url)\n+\t\tif err != nil {\n+\t\t\tfmt.Fprintf(os.Stderr, \"fetch: %v\\n\", err)\n+\t\t\tos.Exit(1)\n+\t\t}\n+\t\tdst := os.Stdout\n+\t\tb, err := io.Copy(dst, resp.Body)\n+\t\tif err != nil {\n+\t\t\tfmt.Fprintf(os.Stderr, \"fetch: reading %s: %v\\n\", url, err)\n+\t\t\tos.Exit(1)\n+\t\t}\n+\t\tresp.Body.Close()\n+\t\tif err != nil {\n+\t\t\tfmt.Fprintf(os.Stderr, \"fetch: reading %s: %v\\n\", url, err)\n+\t\t\tos.Exit(1)\n+\t\t}\n+\t\tfmt.Sprintf(\"%.2fs  %7d  %s\")\n \n+\t}\n }\n"
+                },
+                {
+                    "date": 1711539783455,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -29,8 +29,9 @@\n \tfor range os.Args[1:] {\n \t\tfmt.Println(<-ch) // receive from channel ch\n \t}\n \tfor _, url := range os.Args[1:] {\n+\t\tfetchBuffer()\n \t}\n \tfmt.Printf(\"%.2fs elapsed\\n\", time.Since(start).Seconds())\n }\n \n@@ -54,28 +55,25 @@\n \n //!-\n \n func fetchBuffer(url string) {\n-\tfor _, url := range os.Args[1:] {\n-\t\tif !strings.HasPrefix(url, \"http://\") {\n-\t\t\turl = \"http://\" + url\n-\t\t}\n-\t\tresp, err := http.Get(url)\n-\t\tif err != nil {\n-\t\t\tfmt.Fprintf(os.Stderr, \"fetch: %v\\n\", err)\n-\t\t\tos.Exit(1)\n-\t\t}\n-\t\tdst := os.Stdout\n-\t\tb, err := io.Copy(dst, resp.Body)\n-\t\tif err != nil {\n-\t\t\tfmt.Fprintf(os.Stderr, \"fetch: reading %s: %v\\n\", url, err)\n-\t\t\tos.Exit(1)\n-\t\t}\n-\t\tresp.Body.Close()\n-\t\tif err != nil {\n-\t\t\tfmt.Fprintf(os.Stderr, \"fetch: reading %s: %v\\n\", url, err)\n-\t\t\tos.Exit(1)\n-\t\t}\n-\t\tfmt.Sprintf(\"%.2fs  %7d  %s\")\n-\n+\tif !strings.HasPrefix(url, \"http://\") {\n+\t\turl = \"http://\" + url\n \t}\n+\tresp, err := http.Get(url)\n+\tif err != nil {\n+\t\tfmt.Fprintf(os.Stderr, \"fetch: %v\\n\", err)\n+\t\tos.Exit(1)\n+\t}\n+\tdst := os.Stdout\n+\tb, err := io.Copy(dst, resp.Body)\n+\tif err != nil {\n+\t\tfmt.Fprintf(os.Stderr, \"fetch: reading %s: %v\\n\", url, err)\n+\t\tos.Exit(1)\n+\t}\n+\tresp.Body.Close()\n+\tif err != nil {\n+\t\tfmt.Fprintf(os.Stderr, \"fetch: reading %s: %v\\n\", url, err)\n+\t\tos.Exit(1)\n+\t}\n+\tfmt.Sprintf(\"%.2fs  %7d  %s\")\n }\n"
+                },
+                {
+                    "date": 1711539797505,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -29,9 +29,9 @@\n \tfor range os.Args[1:] {\n \t\tfmt.Println(<-ch) // receive from channel ch\n \t}\n \tfor _, url := range os.Args[1:] {\n-\t\tfetchBuffer()\n+\t\tfetchBuffer(url)\n \t}\n \tfmt.Printf(\"%.2fs elapsed\\n\", time.Since(start).Seconds())\n }\n \n@@ -55,8 +55,9 @@\n \n //!-\n \n func fetchBuffer(url string) {\n+\n \tif !strings.HasPrefix(url, \"http://\") {\n \t\turl = \"http://\" + url\n \t}\n \tresp, err := http.Get(url)\n"
+                },
+                {
+                    "date": 1711539820501,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -55,9 +55,9 @@\n \n //!-\n \n func fetchBuffer(url string) {\n-\n+\tstart := time.Now()\n \tif !strings.HasPrefix(url, \"http://\") {\n \t\turl = \"http://\" + url\n \t}\n \tresp, err := http.Get(url)\n@@ -75,6 +75,7 @@\n \tif err != nil {\n \t\tfmt.Fprintf(os.Stderr, \"fetch: reading %s: %v\\n\", url, err)\n \t\tos.Exit(1)\n \t}\n+\tsecs := time.Since(start).Seconds()\n \tfmt.Sprintf(\"%.2fs  %7d  %s\")\n }\n"
+                },
+                {
+                    "date": 1711539827444,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -76,6 +76,6 @@\n \t\tfmt.Fprintf(os.Stderr, \"fetch: reading %s: %v\\n\", url, err)\n \t\tos.Exit(1)\n \t}\n \tsecs := time.Since(start).Seconds()\n-\tfmt.Sprintf(\"%.2fs  %7d  %s\")\n+\tfmt.Sprintf(\"%.2fs  %7d  %s\", secs, )\n }\n"
+                },
+                {
+                    "date": 1711539917312,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -17,9 +17,9 @@\n \t\"time\"\n )\n \n func main() {\n-\tstart := time.Now()\n+\tstart1 := time.Now()\n \tch := make(chan string)\n \tfor _, url := range os.Args[1:] {\n \t\tif !strings.HasPrefix(url, \"http://\") {\n \t\t\turl = \"http://\" + url\n@@ -76,6 +76,6 @@\n \t\tfmt.Fprintf(os.Stderr, \"fetch: reading %s: %v\\n\", url, err)\n \t\tos.Exit(1)\n \t}\n \tsecs := time.Since(start).Seconds()\n-\tfmt.Sprintf(\"%.2fs  %7d  %s\", secs, )\n+\tfmt.Sprintf(\"%.2fs  %7d  %s\", secs, b, url)\n }\n"
+                },
+                {
+                    "date": 1711540004813,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -17,9 +17,9 @@\n \t\"time\"\n )\n \n func main() {\n-\tstart1 := time.Now()\n+\tstart := time.Now()\n \tch := make(chan string)\n \tfor _, url := range os.Args[1:] {\n \t\tif !strings.HasPrefix(url, \"http://\") {\n \t\t\turl = \"http://\" + url\n@@ -65,9 +65,9 @@\n \t\tfmt.Fprintf(os.Stderr, \"fetch: %v\\n\", err)\n \t\tos.Exit(1)\n \t}\n \tdst := os.Stdout\n-\tb, err := io.Copy(dst, resp.Body)\n+\tnbytes, err := io.Copy(dst, resp.Body)\n \tif err != nil {\n \t\tfmt.Fprintf(os.Stderr, \"fetch: reading %s: %v\\n\", url, err)\n \t\tos.Exit(1)\n \t}\n"
+                },
+                {
+                    "date": 1711540022113,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -68,14 +68,14 @@\n \tdst := os.Stdout\n \tnbytes, err := io.Copy(dst, resp.Body)\n \tif err != nil {\n \t\tfmt.Fprintf(os.Stderr, \"fetch: reading %s: %v\\n\", url, err)\n-\t\tos.Exit(1)\n+\t\tre\n \t}\n \tresp.Body.Close()\n \tif err != nil {\n \t\tfmt.Fprintf(os.Stderr, \"fetch: reading %s: %v\\n\", url, err)\n \t\tos.Exit(1)\n \t}\n \tsecs := time.Since(start).Seconds()\n-\tfmt.Sprintf(\"%.2fs  %7d  %s\", secs, b, url)\n+\tfmt.Sprintf(\"%.2fs  %7d  %s\", secs, nbytes, url)\n }\n"
+                },
+                {
+                    "date": 1711540028049,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -62,20 +62,20 @@\n \t}\n \tresp, err := http.Get(url)\n \tif err != nil {\n \t\tfmt.Fprintf(os.Stderr, \"fetch: %v\\n\", err)\n-\t\tos.Exit(1)\n+\t\treturn\n \t}\n \tdst := os.Stdout\n \tnbytes, err := io.Copy(dst, resp.Body)\n \tif err != nil {\n \t\tfmt.Fprintf(os.Stderr, \"fetch: reading %s: %v\\n\", url, err)\n-\t\tre\n+\t\treturn\n \t}\n \tresp.Body.Close()\n \tif err != nil {\n \t\tfmt.Fprintf(os.Stderr, \"fetch: reading %s: %v\\n\", url, err)\n-\t\tos.Exit(1)\n+\t\treturn\n \t}\n \tsecs := time.Since(start).Seconds()\n \tfmt.Sprintf(\"%.2fs  %7d  %s\", secs, nbytes, url)\n }\n"
+                },
+                {
+                    "date": 1711540046564,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -64,18 +64,7 @@\n \tif err != nil {\n \t\tfmt.Fprintf(os.Stderr, \"fetch: %v\\n\", err)\n \t\treturn\n \t}\n-\tdst := os.Stdout\n-\tnbytes, err := io.Copy(dst, resp.Body)\n-\tif err != nil {\n-\t\tfmt.Fprintf(os.Stderr, \"fetch: reading %s: %v\\n\", url, err)\n-\t\treturn\n-\t}\n-\tresp.Body.Close()\n-\tif err != nil {\n-\t\tfmt.Fprintf(os.Stderr, \"fetch: reading %s: %v\\n\", url, err)\n-\t\treturn\n-\t}\n-\tsecs := time.Since(start).Seconds()\n-\tfmt.Sprintf(\"%.2fs  %7d  %s\", secs, nbytes, url)\n+\tresult := fmt.Sprintf(\"%.2fs  %7d  %s\", secs, nbytes, url)\n+\tfmt.Println(result)\n }\n"
+                },
+                {
+                    "date": 1711540062289,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -64,7 +64,8 @@\n \tif err != nil {\n \t\tfmt.Fprintf(os.Stderr, \"fetch: %v\\n\", err)\n \t\treturn\n \t}\n+\tsecs := \n \tresult := fmt.Sprintf(\"%.2fs  %7d  %s\", secs, nbytes, url)\n \tfmt.Println(result)\n }\n"
+                },
+                {
+                    "date": 1711540070079,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -64,8 +64,9 @@\n \tif err != nil {\n \t\tfmt.Fprintf(os.Stderr, \"fetch: %v\\n\", err)\n \t\treturn\n \t}\n-\tsecs := \n+\t\n+\tsecs := time.Since(start).Seconds()\n \tresult := fmt.Sprintf(\"%.2fs  %7d  %s\", secs, nbytes, url)\n \tfmt.Println(result)\n }\n"
+                },
+                {
+                    "date": 1711540077531,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -64,8 +64,9 @@\n \tif err != nil {\n \t\tfmt.Fprintf(os.Stderr, \"fetch: %v\\n\", err)\n \t\treturn\n \t}\n+\tnbytes, err := io.Copy(ioutil.Discard, resp.Body)\n \t\n \tsecs := time.Since(start).Seconds()\n \tresult := fmt.Sprintf(\"%.2fs  %7d  %s\", secs, nbytes, url)\n \tfmt.Println(result)\n"
+                },
+                {
+                    "date": 1711540082837,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -65,9 +65,11 @@\n \t\tfmt.Fprintf(os.Stderr, \"fetch: %v\\n\", err)\n \t\treturn\n \t}\n \tnbytes, err := io.Copy(ioutil.Discard, resp.Body)\n-\t\n+\tresp.Body.Close()\n+\tif err != nil {\n+\t\t\n \tsecs := time.Since(start).Seconds()\n \tresult := fmt.Sprintf(\"%.2fs  %7d  %s\", secs, nbytes, url)\n \tfmt.Println(result)\n }\n"
+                },
+                {
+                    "date": 1711540122590,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -56,20 +56,22 @@\n //!-\n \n func fetchBuffer(url string) {\n \tstart := time.Now()\n-\tif !strings.HasPrefix(url, \"http://\") {\n-\t\turl = \"http://\" + url\n-\t}\n+\t// if !strings.HasPrefix(url, \"http://\") {\n+\t// \turl = \"http://\" + url\n+\t// }\n \tresp, err := http.Get(url)\n \tif err != nil {\n \t\tfmt.Fprintf(os.Stderr, \"fetch: %v\\n\", err)\n \t\treturn\n \t}\n \tnbytes, err := io.Copy(ioutil.Discard, resp.Body)\n \tresp.Body.Close()\n \tif err != nil {\n-\t\t\n+\t\tfmt.Fprintf(os.Stderr, \"fetch: reading %s: %v\\n\", url, err)\n+\t\treturn\n+\t}\n \tsecs := time.Since(start).Seconds()\n \tresult := fmt.Sprintf(\"%.2fs  %7d  %s\", secs, nbytes, url)\n \tfmt.Println(result)\n }\n"
+                },
+                {
+                    "date": 1711540129633,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -20,11 +20,11 @@\n func main() {\n \tstart := time.Now()\n \tch := make(chan string)\n \tfor _, url := range os.Args[1:] {\n-\t\tif !strings.HasPrefix(url, \"http://\") {\n-\t\t\turl = \"http://\" + url\n-\t\t}\n+\t\t// if !strings.HasPrefix(url, \"http://\") {\n+\t\t// \turl = \"http://\" + url\n+\t\t// }\n \t\tgo fetch(url, ch) // start a goroutine\n \t}\n \tfor range os.Args[1:] {\n \t\tfmt.Println(<-ch) // receive from channel ch\n"
+                },
+                {
+                    "date": 1711540158590,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -12,9 +12,8 @@\n \t\"io\"\n \t\"io/ioutil\"\n \t\"net/http\"\n \t\"os\"\n-\t\"strings\"\n \t\"time\"\n )\n \n func main() {\n@@ -49,9 +48,9 @@\n \t\tch <- fmt.Sprintf(\"while reading %s: %v\", url, err)\n \t\treturn\n \t}\n \tsecs := time.Since(start).Seconds()\n-\tch <- fmt.Sprintf(\"%.2fs  %7d  %s\", secs, nbytes, url)\n+\tch <- fmt.Sprintf(\"Test%.2fs  %7d  %s\", secs, nbytes, url)\n }\n \n //!-\n \n"
+                },
+                {
+                    "date": 1711540169079,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -48,9 +48,9 @@\n \t\tch <- fmt.Sprintf(\"while reading %s: %v\", url, err)\n \t\treturn\n \t}\n \tsecs := time.Since(start).Seconds()\n-\tch <- fmt.Sprintf(\"Test%.2fs  %7d  %s\", secs, nbytes, url)\n+\tch <- fmt.Sprintf(\"Test1: %.2fs  %7d  %s\", secs, nbytes, url)\n }\n \n //!-\n \n@@ -70,7 +70,7 @@\n \t\tfmt.Fprintf(os.Stderr, \"fetch: reading %s: %v\\n\", url, err)\n \t\treturn\n \t}\n \tsecs := time.Since(start).Seconds()\n-\tresult := fmt.Sprintf(\"%.2fs  %7d  %s\", secs, nbytes, url)\n+\tresult := fmt.Sprintf(\"Test: %.2fs  %7d  %s\", secs, nbytes, url)\n \tfmt.Println(result)\n }\n"
+                },
+                {
+                    "date": 1711540209391,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -26,13 +26,13 @@\n \t\tgo fetch(url, ch) // start a goroutine\n \t}\n \tfor range os.Args[1:] {\n \t\tfmt.Println(<-ch) // receive from channel ch\n-\t}\n+\t}fmt.Printf(\"%.2fs elapsed\\n\", time.Since(start).Seconds())\n \tfor _, url := range os.Args[1:] {\n \t\tfetchBuffer(url)\n \t}\n-\tfmt.Printf(\"%.2fs elapsed\\n\", time.Since(start).Seconds())\n+\n }\n \n func fetch(url string, ch chan<- string) {\n \tstart := time.Now()\n@@ -70,7 +70,7 @@\n \t\tfmt.Fprintf(os.Stderr, \"fetch: reading %s: %v\\n\", url, err)\n \t\treturn\n \t}\n \tsecs := time.Since(start).Seconds()\n-\tresult := fmt.Sprintf(\"Test: %.2fs  %7d  %s\", secs, nbytes, url)\n+\tresult := fmt.Sprintf(\"Test2: %.2fs  %7d  %s\", secs, nbytes, url)\n \tfmt.Println(result)\n }\n"
+                },
+                {
+                    "date": 1711540216431,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -26,9 +26,11 @@\n \t\tgo fetch(url, ch) // start a goroutine\n \t}\n \tfor range os.Args[1:] {\n \t\tfmt.Println(<-ch) // receive from channel ch\n-\t}fmt.Printf(\"%.2fs elapsed\\n\", time.Since(start).Seconds())\n+\t}\n+\tfmt.Printf(\"%.2fs elapsed\\n\", time.Since(start).Seconds())\n+\tstart := time.Now()\n \tfor _, url := range os.Args[1:] {\n \t\tfetchBuffer(url)\n \t}\n \n"
+                },
+                {
+                    "date": 1711540223814,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -16,9 +16,9 @@\n \t\"time\"\n )\n \n func main() {\n-\tstart := time.Now()\n+\tstart1 := time.Now()\n \tch := make(chan string)\n \tfor _, url := range os.Args[1:] {\n \t\t// if !strings.HasPrefix(url, \"http://\") {\n \t\t// \turl = \"http://\" + url\n@@ -27,10 +27,10 @@\n \t}\n \tfor range os.Args[1:] {\n \t\tfmt.Println(<-ch) // receive from channel ch\n \t}\n-\tfmt.Printf(\"%.2fs elapsed\\n\", time.Since(start).Seconds())\n-\tstart := time.Now()\n+\tfmt.Printf(\"%.2fs elapsed\\n\", time.Since(start1).Seconds())\n+\tstart2 := time.Now()\n \tfor _, url := range os.Args[1:] {\n \t\tfetchBuffer(url)\n \t}\n \n"
+                },
+                {
+                    "date": 1711540232074,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -32,8 +32,9 @@\n \tstart2 := time.Now()\n \tfor _, url := range os.Args[1:] {\n \t\tfetchBuffer(url)\n \t}\n+\tfmt.Printf(\"%.2fs elapsed\\n\", time.Since(start2.AddDate()).Seconds())\n \n }\n \n func fetch(url string, ch chan<- string) {\n"
+                },
+                {
+                    "date": 1711540288865,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -28,14 +28,14 @@\n \tfor range os.Args[1:] {\n \t\tfmt.Println(<-ch) // receive from channel ch\n \t}\n \tfmt.Printf(\"%.2fs elapsed\\n\", time.Since(start1).Seconds())\n+\n \tstart2 := time.Now()\n \tfor _, url := range os.Args[1:] {\n \t\tfetchBuffer(url)\n \t}\n-\tfmt.Printf(\"%.2fs elapsed\\n\", time.Since(start2.AddDate()).Seconds())\n-\n+\tfmt.Printf(\"%.2fs elapsed\\n\", time.Since(start2).Seconds())\n }\n \n func fetch(url string, ch chan<- string) {\n \tstart := time.Now()\n"
+                }
+            ],
+            "date": 1711539439129,
+            "name": "Commit-0",
+            "content": "// Copyright © 2016 Alan A. A. Donovan & Brian W. Kernighan.\n// License: https://creativecommons.org/licenses/by-nc-sa/4.0/\n\n// See page 17.\n//!+\n\n// Fetchall fetches URLs in parallel and reports their times and sizes.\npackage main\n\nimport (\n\t\"fmt\"\n\t\"io\"\n\t\"io/ioutil\"\n\t\"net/http\"\n\t\"os\"\n\t\"time\"\n)\n\nfunc main() {\n\tstart := time.Now()\n\tch := make(chan string)\n\tfor _, url := range os.Args[1:] {\n\t\tgo fetch(url, ch) // start a goroutine\n\t}\n\tfor range os.Args[1:] {\n\t\tfmt.Println(<-ch) // receive from channel ch\n\t}\n\tfmt.Printf(\"%.2fs elapsed\\n\", time.Since(start).Seconds())\n}\n\nfunc fetch(url string, ch chan) {\n\tstart := time.Now()\n\tresp, err := http.Get(url)\n\tif err != nil {\n\t\tch <- fmt.Sprint(err) // send to channel ch\n\t\treturn\n\t}\n\n\tnbytes, err := io.Copy(ioutil.Discard, resp.Body)\n\tresp.Body.Close() // don't leak resources\n\tif err != nil {\n\t\tch <- fmt.Sprintf(\"while reading %s: %v\", url, err)\n\t\treturn\n\t}\n\tsecs := time.Since(start).Seconds()\n\tch <- fmt.Sprintf(\"%.2fs  %7d  %s\", secs, nbytes, url)\n}\n\n//!-\n"
+        }
+    ]
+}

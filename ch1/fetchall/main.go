@@ -17,15 +17,24 @@ import (
 )
 
 func main() {
-	start := time.Now()
+	start1 := time.Now()
 	ch := make(chan string)
 	for _, url := range os.Args[1:] {
+		// if !strings.HasPrefix(url, "http://") {
+		// 	url = "http://" + url
+		// }
 		go fetch(url, ch) // start a goroutine
 	}
 	for range os.Args[1:] {
 		fmt.Println(<-ch) // receive from channel ch
 	}
-	fmt.Printf("%.2fs elapsed\n", time.Since(start).Seconds())
+	fmt.Printf("%.2fs elapsed\n", time.Since(start1).Seconds())
+
+	start2 := time.Now()
+	for _, url := range os.Args[1:] {
+		fetchBuffer(url)
+	}
+	fmt.Printf("%.2fs elapsed\n", time.Since(start2).Seconds())
 }
 
 func fetch(url string, ch chan<- string) {
@@ -43,7 +52,28 @@ func fetch(url string, ch chan<- string) {
 		return
 	}
 	secs := time.Since(start).Seconds()
-	ch <- fmt.Sprintf("%.2fs  %7d  %s", secs, nbytes, url)
+	ch <- fmt.Sprintf("Test1: %.2fs  %7d  %s", secs, nbytes, url)
 }
 
 //!-
+
+func fetchBuffer(url string) {
+	start := time.Now()
+	// if !strings.HasPrefix(url, "http://") {
+	// 	url = "http://" + url
+	// }
+	resp, err := http.Get(url)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "fetch: %v\n", err)
+		return
+	}
+	nbytes, err := io.Copy(ioutil.Discard, resp.Body)
+	resp.Body.Close()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "fetch: reading %s: %v\n", url, err)
+		return
+	}
+	secs := time.Since(start).Seconds()
+	result := fmt.Sprintf("Test2: %.2fs  %7d  %s", secs, nbytes, url)
+	fmt.Println(result)
+}

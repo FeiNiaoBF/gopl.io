@@ -18,6 +18,7 @@ import (
 	"math/rand"
 	"net/http"
 	"os"
+	"strconv"
 	"time"
 )
 
@@ -44,20 +45,30 @@ func main() {
 	if len(os.Args) > 1 && os.Args[1] == "web" {
 		//!+http
 		handler := func(w http.ResponseWriter, r *http.Request) {
-			lissajous(w)
+			cycles := r.URL.Query().Get("cycles")
+			// default cycles to 5
+			if cycles == "" {
+				cycles = "5"
+			}
+			cyclesint, err := strconv.Atoi(cycles)
+			if err != nil {
+				http.Error(w, "invalid cycles", http.StatusBadRequest)
+				return
+			}
+			lissajous(w, cyclesint)
 		}
 		http.HandleFunc("/", handler)
 		//!-http
-		log.Fatal(http.ListenAndServe("localhost:8000", nil))
+		log.Fatal(http.ListenAndServe("localhost:8002", nil))
 		return
 	}
 	//!+main
-	lissajous(os.Stdout)
+	lissajous(os.Stdout, 5)
 }
 
-func lissajous(out io.Writer) {
+func lissajous(out io.Writer, cycles int) {
 	const (
-		cycles  = 5     // number of complete x oscillator revolutions
+		// cycles  = 5     // number of complete x oscillator revolutions
 		res     = 0.001 // angular resolution
 		size    = 100   // image canvas covers [-size..+size]
 		nframes = 64    // number of animation frames
@@ -69,7 +80,7 @@ func lissajous(out io.Writer) {
 	for i := 0; i < nframes; i++ {
 		rect := image.Rect(0, 0, 2*size+1, 2*size+1)
 		img := image.NewPaletted(rect, palette)
-		for t := 0.0; t < cycles*2*math.Pi; t += res {
+		for t := 0.0; t < float64(cycles)*2*math.Pi; t += res {
 			x := math.Sin(t)
 			y := math.Sin(t*freq + phase)
 			img.SetColorIndex(size+int(x*size+0.5), size+int(y*size+0.5),

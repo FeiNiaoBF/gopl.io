@@ -1,0 +1,18 @@
+{
+    "sourceFile": "dup3/main.go",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 0,
+            "patches": [
+                {
+                    "date": 1711535266619,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                }
+            ],
+            "date": 1711535266619,
+            "name": "Commit-0",
+            "content": "// Copyright © 2016 Alan A. A. Donovan & Brian W. Kernighan.\n// License: https://creativecommons.org/licenses/by-nc-sa/4.0/\n\n// See page 12.\n\n//!+\n\n// Dup3 prints the count and text of lines that\n// appear more than once in the named input files.\npackage main\n\nimport (\n\t\"fmt\"\n\t\"io/ioutil\"\n\t\"os\"\n\t\"strings\"\n)\n\nfunc main() {\n\tcounts := make(map[string]int)\n\tfor _, filename := range os.Args[1:] {\n\t\tdata, err := ioutil.ReadFile(filename)\n\t\tif err != nil {\n\t\t\tfmt.Fprintf(os.Stderr, \"dup3: %v\\n\", err)\n\t\t\tcontinue\n\t\t}\n\t\tfor _, line := range strings.Split(string(data), \"\\n\") {\n\t\t\tcounts[line]++\n\t\t}\n\t}\n\tfor line, n := range counts {\n\t\tif n > 1 {\n\t\t\tfmt.Printf(\"%d\\t%s\\n\", n, line)\n\t\t}\n\t}\n}\n\n//!-\n"
+        }
+    ]
+}

@@ -1,0 +1,122 @@
+{
+    "sourceFile": "lissajous/main.go",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 26,
+            "patches": [
+                {
+                    "date": 1711541348228,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1711541553625,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -54,9 +54,9 @@\n \t//!+main\n \tlissajous(os.Stdout)\n }\n \n-func lissajous(out io.Writer) {\n+func lissajous(out io.Writer, ) {\n \tconst (\n \t\tcycles  = 5     // number of complete x oscillator revolutions\n \t\tres     = 0.001 // angular resolution\n \t\tsize    = 100   // image canvas covers [-size..+size]\n"
+                },
+                {
+                    "date": 1711541560186,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -54,9 +54,9 @@\n \t//!+main\n \tlissajous(os.Stdout)\n }\n \n-func lissajous(out io.Writer, ) {\n+func lissajous(out io.Writer, cycles int) {\n \tconst (\n \t\tcycles  = 5     // number of complete x oscillator revolutions\n \t\tres     = 0.001 // angular resolution\n \t\tsize    = 100   // image canvas covers [-size..+size]\n"
+                },
+                {
+                    "date": 1711541571755,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -43,9 +43,9 @@\n \n \tif len(os.Args) > 1 && os.Args[1] == \"web\" {\n \t\t//!+http\n \t\thandler := func(w http.ResponseWriter, r *http.Request) {\n-\t\t\tlissajous(w)\n+\t\t\tlissajous(w, )\n \t\t}\n \t\thttp.HandleFunc(\"/\", handler)\n \t\t//!-http\n \t\tlog.Fatal(http.ListenAndServe(\"localhost:8002\", nil))\n@@ -56,9 +56,9 @@\n }\n \n func lissajous(out io.Writer, cycles int) {\n \tconst (\n-\t\tcycles  = 5     // number of complete x oscillator revolutions\n+\t\t// cycles  = 5     // number of complete x oscillator revolutions\n \t\tres     = 0.001 // angular resolution\n \t\tsize    = 100   // image canvas covers [-size..+size]\n \t\tnframes = 64    // number of animation frames\n \t\tdelay   = 8     // delay between frames in 10ms units\n"
+                },
+                {
+                    "date": 1711541706371,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -43,9 +43,10 @@\n \n \tif len(os.Args) > 1 && os.Args[1] == \"web\" {\n \t\t//!+http\n \t\thandler := func(w http.ResponseWriter, r *http.Request) {\n-\t\t\tlissajous(w, )\n+\t\t\t\n+\t\t\tlissajous(w, 5)\n \t\t}\n \t\thttp.HandleFunc(\"/\", handler)\n \t\t//!-http\n \t\tlog.Fatal(http.ListenAndServe(\"localhost:8002\", nil))\n"
+                },
+                {
+                    "date": 1711541717992,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -43,9 +43,9 @@\n \n \tif len(os.Args) > 1 && os.Args[1] == \"web\" {\n \t\t//!+http\n \t\thandler := func(w http.ResponseWriter, r *http.Request) {\n-\t\t\t\n+\t\t\tcyc\n \t\t\tlissajous(w, 5)\n \t\t}\n \t\thttp.HandleFunc(\"/\", handler)\n \t\t//!-http\n"
+                },
+                {
+                    "date": 1711541725241,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -43,9 +43,9 @@\n \n \tif len(os.Args) > 1 && os.Args[1] == \"web\" {\n \t\t//!+http\n \t\thandler := func(w http.ResponseWriter, r *http.Request) {\n-\t\t\tcyc\n+\t\t\tcycles := r.\n \t\t\tlissajous(w, 5)\n \t\t}\n \t\thttp.HandleFunc(\"/\", handler)\n \t\t//!-http\n"
+                },
+                {
+                    "date": 1711541734455,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -43,9 +43,11 @@\n \n \tif len(os.Args) > 1 && os.Args[1] == \"web\" {\n \t\t//!+http\n \t\thandler := func(w http.ResponseWriter, r *http.Request) {\n-\t\t\tcycles := r.\n+\t\t\tcycles := r.URL.Query().Get(\"cycles\")\n+\t\t\tif cycles == \"\" {\n+\t\t\t\t\n \t\t\tlissajous(w, 5)\n \t\t}\n \t\thttp.HandleFunc(\"/\", handler)\n \t\t//!-http\n"
+                },
+                {
+                    "date": 1711541745562,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -45,9 +45,10 @@\n \t\t//!+http\n \t\thandler := func(w http.ResponseWriter, r *http.Request) {\n \t\t\tcycles := r.URL.Query().Get(\"cycles\")\n \t\t\tif cycles == \"\" {\n-\t\t\t\t\n+\t\t\t\tcycles = 5\n+\t\t\t}\n \t\t\tlissajous(w, 5)\n \t\t}\n \t\thttp.HandleFunc(\"/\", handler)\n \t\t//!-http\n"
+                },
+                {
+                    "date": 1711541750833,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -45,9 +45,9 @@\n \t\t//!+http\n \t\thandler := func(w http.ResponseWriter, r *http.Request) {\n \t\t\tcycles := r.URL.Query().Get(\"cycles\")\n \t\t\tif cycles == \"\" {\n-\t\t\t\tcycles = 5\n+\t\t\t\tcycles = \"5\"\n \t\t\t}\n \t\t\tlissajous(w, 5)\n \t\t}\n \t\thttp.HandleFunc(\"/\", handler)\n"
+                },
+                {
+                    "date": 1711541756221,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -47,9 +47,9 @@\n \t\t\tcycles := r.URL.Query().Get(\"cycles\")\n \t\t\tif cycles == \"\" {\n \t\t\t\tcycles = \"5\"\n \t\t\t}\n-\t\t\tlissajous(w, 5)\n+\t\t\tlissajous(w, sr)\n \t\t}\n \t\thttp.HandleFunc(\"/\", handler)\n \t\t//!-http\n \t\tlog.Fatal(http.ListenAndServe(\"localhost:8002\", nil))\n"
+                },
+                {
+                    "date": 1711541762962,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -17,8 +17,9 @@\n \t\"math\"\n \t\"math/rand\"\n \t\"net/http\"\n \t\"os\"\n+\t\"strconv\"\n \t\"time\"\n )\n \n //!-main\n@@ -47,9 +48,9 @@\n \t\t\tcycles := r.URL.Query().Get(\"cycles\")\n \t\t\tif cycles == \"\" {\n \t\t\t\tcycles = \"5\"\n \t\t\t}\n-\t\t\tlissajous(w, sr)\n+\t\t\tlissajous(w, strconv.)\n \t\t}\n \t\thttp.HandleFunc(\"/\", handler)\n \t\t//!-http\n \t\tlog.Fatal(http.ListenAndServe(\"localhost:8002\", nil))\n"
+                },
+                {
+                    "date": 1711541769065,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -48,9 +48,9 @@\n \t\t\tcycles := r.URL.Query().Get(\"cycles\")\n \t\t\tif cycles == \"\" {\n \t\t\t\tcycles = \"5\"\n \t\t\t}\n-\t\t\tlissajous(w, strconv.)\n+\t\t\tlissajous(w, strconv.Atoi(cycles))\n \t\t}\n \t\thttp.HandleFunc(\"/\", handler)\n \t\t//!-http\n \t\tlog.Fatal(http.ListenAndServe(\"localhost:8002\", nil))\n"
+                },
+                {
+                    "date": 1711541791368,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -48,9 +48,10 @@\n \t\t\tcycles := r.URL.Query().Get(\"cycles\")\n \t\t\tif cycles == \"\" {\n \t\t\t\tcycles = \"5\"\n \t\t\t}\n-\t\t\tlissajous(w, strconv.Atoi(cycles))\n+\t\t\tcycles \n+\t\t\tlissajous(w, )\n \t\t}\n \t\thttp.HandleFunc(\"/\", handler)\n \t\t//!-http\n \t\tlog.Fatal(http.ListenAndServe(\"localhost:8002\", nil))\n"
+                },
+                {
+                    "date": 1711541797275,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -48,10 +48,10 @@\n \t\t\tcycles := r.URL.Query().Get(\"cycles\")\n \t\t\tif cycles == \"\" {\n \t\t\t\tcycles = \"5\"\n \t\t\t}\n-\t\t\tcycles \n-\t\t\tlissajous(w, )\n+\t\t\tcyclesint, err := strconv.Atoi(cycles)\n+\t\t\tlissajous(w)\n \t\t}\n \t\thttp.HandleFunc(\"/\", handler)\n \t\t//!-http\n \t\tlog.Fatal(http.ListenAndServe(\"localhost:8002\", nil))\n"
+                },
+                {
+                    "date": 1711541802710,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -49,9 +49,9 @@\n \t\t\tif cycles == \"\" {\n \t\t\t\tcycles = \"5\"\n \t\t\t}\n \t\t\tcyclesint, err := strconv.Atoi(cycles)\n-\t\t\tlissajous(w)\n+\t\t\tlissajous(w, )\n \t\t}\n \t\thttp.HandleFunc(\"/\", handler)\n \t\t//!-http\n \t\tlog.Fatal(http.ListenAndServe(\"localhost:8002\", nil))\n"
+                },
+                {
+                    "date": 1711541807949,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -49,9 +49,9 @@\n \t\t\tif cycles == \"\" {\n \t\t\t\tcycles = \"5\"\n \t\t\t}\n \t\t\tcyclesint, err := strconv.Atoi(cycles)\n-\t\t\tlissajous(w, )\n+\t\t\tlissajous(w, cyclesint)\n \t\t}\n \t\thttp.HandleFunc(\"/\", handler)\n \t\t//!-http\n \t\tlog.Fatal(http.ListenAndServe(\"localhost:8002\", nil))\n"
+                },
+                {
+                    "date": 1711541816247,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -49,8 +49,11 @@\n \t\t\tif cycles == \"\" {\n \t\t\t\tcycles = \"5\"\n \t\t\t}\n \t\t\tcyclesint, err := strconv.Atoi(cycles)\n+\t\t\tif err != nil {\n+\t\t\t\t\n+\t\t\t}\n \t\t\tlissajous(w, cyclesint)\n \t\t}\n \t\thttp.HandleFunc(\"/\", handler)\n \t\t//!-http\n"
+                },
+                {
+                    "date": 1711541843240,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -50,9 +50,10 @@\n \t\t\t\tcycles = \"5\"\n \t\t\t}\n \t\t\tcyclesint, err := strconv.Atoi(cycles)\n \t\t\tif err != nil {\n-\t\t\t\t\n+\t\t\t\thttp.Error(w, \"invalid cycles\", http.StatusBadRequest)\n+\t\t\t\treturn\n \t\t\t}\n \t\t\tlissajous(w, cyclesint)\n \t\t}\n \t\thttp.HandleFunc(\"/\", handler)\n@@ -60,9 +61,9 @@\n \t\tlog.Fatal(http.ListenAndServe(\"localhost:8002\", nil))\n \t\treturn\n \t}\n \t//!+main\n-\tlissajous(os.Stdout)\n+\tlissajous(os.Stdout, )\n }\n \n func lissajous(out io.Writer, cycles int) {\n \tconst (\n"
+                },
+                {
+                    "date": 1711541860630,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -61,9 +61,9 @@\n \t\tlog.Fatal(http.ListenAndServe(\"localhost:8002\", nil))\n \t\treturn\n \t}\n \t//!+main\n-\tlissajous(os.Stdout, )\n+\tlissajous(os.Stdout, 5)\n }\n \n func lissajous(out io.Writer, cycles int) {\n \tconst (\n@@ -78,9 +78,9 @@\n \tphase := 0.0 // phase difference\n \tfor i := 0; i < nframes; i++ {\n \t\trect := image.Rect(0, 0, 2*size+1, 2*size+1)\n \t\timg := image.NewPaletted(rect, palette)\n-\t\tfor t := 0.0; t < cycles*2*math.Pi; t += res {\n+\t\tfor t := 0.0; t < cycles*2*float64(math.Pi); t += res {\n \t\t\tx := math.Sin(t)\n \t\t\ty := math.Sin(t*freq + phase)\n \t\t\timg.SetColorIndex(size+int(x*size+0.5), size+int(y*size+0.5),\n \t\t\t\tblackIndex)\n"
+                },
+                {
+                    "date": 1711541868158,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -66,9 +66,9 @@\n }\n \n func lissajous(out io.Writer, cycles int) {\n \tconst (\n-\t\t// cycles  = 5     // number of complete x oscillator revolutions\n+\t\tcycles  = 5     // number of complete x oscillator revolutions\n \t\tres     = 0.001 // angular resolution\n \t\tsize    = 100   // image canvas covers [-size..+size]\n \t\tnframes = 64    // number of animation frames\n \t\tdelay   = 8     // delay between frames in 10ms units\n@@ -78,9 +78,9 @@\n \tphase := 0.0 // phase difference\n \tfor i := 0; i < nframes; i++ {\n \t\trect := image.Rect(0, 0, 2*size+1, 2*size+1)\n \t\timg := image.NewPaletted(rect, palette)\n-\t\tfor t := 0.0; t < cycles*2*float64(math.Pi); t += res {\n+\t\tfor t := 0.0; t < cycles*2*math.Pi; t += res {\n \t\t\tx := math.Sin(t)\n \t\t\ty := math.Sin(t*freq + phase)\n \t\t\timg.SetColorIndex(size+int(x*size+0.5), size+int(y*size+0.5),\n \t\t\t\tblackIndex)\n"
+                },
+                {
+                    "date": 1711541873239,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -66,9 +66,9 @@\n }\n \n func lissajous(out io.Writer, cycles int) {\n \tconst (\n-\t\tcycles  = 5     // number of complete x oscillator revolutions\n+\t\t// cycles  = 5     // number of complete x oscillator revolutions\n \t\tres     = 0.001 // angular resolution\n \t\tsize    = 100   // image canvas covers [-size..+size]\n \t\tnframes = 64    // number of animation frames\n \t\tdelay   = 8     // delay between frames in 10ms units\n@@ -78,9 +78,9 @@\n \tphase := 0.0 // phase difference\n \tfor i := 0; i < nframes; i++ {\n \t\trect := image.Rect(0, 0, 2*size+1, 2*size+1)\n \t\timg := image.NewPaletted(rect, palette)\n-\t\tfor t := 0.0; t < cycles*2*math.Pi; t += res {\n+\t\tfor t := 0.0; t < cycles*2*math; t += res {\n \t\t\tx := math.Sin(t)\n \t\t\ty := math.Sin(t*freq + phase)\n \t\t\timg.SetColorIndex(size+int(x*size+0.5), size+int(y*size+0.5),\n \t\t\t\tblackIndex)\n"
+                },
+                {
+                    "date": 1711541879676,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -78,9 +78,9 @@\n \tphase := 0.0 // phase difference\n \tfor i := 0; i < nframes; i++ {\n \t\trect := image.Rect(0, 0, 2*size+1, 2*size+1)\n \t\timg := image.NewPaletted(rect, palette)\n-\t\tfor t := 0.0; t < cycles*2*math; t += res {\n+\t\tfor t := 0.0; t < cycles*2*math.P; t += res {\n \t\t\tx := math.Sin(t)\n \t\t\ty := math.Sin(t*freq + phase)\n \t\t\timg.SetColorIndex(size+int(x*size+0.5), size+int(y*size+0.5),\n \t\t\t\tblackIndex)\n"
+                },
+                {
+                    "date": 1711541934589,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -78,9 +78,9 @@\n \tphase := 0.0 // phase difference\n \tfor i := 0; i < nframes; i++ {\n \t\trect := image.Rect(0, 0, 2*size+1, 2*size+1)\n \t\timg := image.NewPaletted(rect, palette)\n-\t\tfor t := 0.0; t < cycles*2*math.P; t += res {\n+\t\tfor t := 0.0; t < flocycles*2*math.Pi; t += res {\n \t\t\tx := math.Sin(t)\n \t\t\ty := math.Sin(t*freq + phase)\n \t\t\timg.SetColorIndex(size+int(x*size+0.5), size+int(y*size+0.5),\n \t\t\t\tblackIndex)\n"
+                },
+                {
+                    "date": 1711541940912,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -78,9 +78,9 @@\n \tphase := 0.0 // phase difference\n \tfor i := 0; i < nframes; i++ {\n \t\trect := image.Rect(0, 0, 2*size+1, 2*size+1)\n \t\timg := image.NewPaletted(rect, palette)\n-\t\tfor t := 0.0; t < flocycles*2*math.Pi; t += res {\n+\t\tfor t := 0.0; t < float64(cycles)*2*math.Pi; t += res {\n \t\t\tx := math.Sin(t)\n \t\t\ty := math.Sin(t*freq + phase)\n \t\t\timg.SetColorIndex(size+int(x*size+0.5), size+int(y*size+0.5),\n \t\t\t\tblackIndex)\n"
+                },
+                {
+                    "date": 1711542052147,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -45,8 +45,9 @@\n \tif len(os.Args) > 1 && os.Args[1] == \"web\" {\n \t\t//!+http\n \t\thandler := func(w http.ResponseWriter, r *http.Request) {\n \t\t\tcycles := r.URL.Query().Get(\"cycles\")\n+\t\t\t// \n \t\t\tif cycles == \"\" {\n \t\t\t\tcycles = \"5\"\n \t\t\t}\n \t\t\tcyclesint, err := strconv.Atoi(cycles)\n"
+                },
+                {
+                    "date": 1711542058598,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -45,9 +45,9 @@\n \tif len(os.Args) > 1 && os.Args[1] == \"web\" {\n \t\t//!+http\n \t\thandler := func(w http.ResponseWriter, r *http.Request) {\n \t\t\tcycles := r.URL.Query().Get(\"cycles\")\n-\t\t\t// \n+\t\t\t// default cyc\n \t\t\tif cycles == \"\" {\n \t\t\t\tcycles = \"5\"\n \t\t\t}\n \t\t\tcyclesint, err := strconv.Atoi(cycles)\n"
+                }
+            ],
+            "date": 1711541348228,
+            "name": "Commit-0",
+            "content": "// Copyright © 2016 Alan A. A. Donovan & Brian W. Kernighan.\n// License: https://creativecommons.org/licenses/by-nc-sa/4.0/\n\n// Run with \"web\" command-line argument for web server.\n// See page 13.\n//!+main\n\n// Lissajous generates GIF animations of random Lissajous figures.\npackage main\n\nimport (\n\t\"image\"\n\t\"image/color\"\n\t\"image/gif\"\n\t\"io\"\n\t\"log\"\n\t\"math\"\n\t\"math/rand\"\n\t\"net/http\"\n\t\"os\"\n\t\"time\"\n)\n\n//!-main\n// Packages not needed by version in book.\n\n//!+main\n\nvar palette = []color.Color{color.RGBA{0xe0, 0x6c, 0x65, 0xFF}}\n\nconst (\n\twhiteIndex = 0 // first color in palette\n\tblackIndex = 1 // next color in palette\n\n)\n\nfunc main() {\n\t//!-main\n\t// The sequence of images is deterministic unless we seed\n\t// the pseudo-random number generator using the current time.\n\t// Thanks to Randall McPherson for pointing out the omission.\n\trand.Seed(time.Now().UTC().UnixNano())\n\n\tif len(os.Args) > 1 && os.Args[1] == \"web\" {\n\t\t//!+http\n\t\thandler := func(w http.ResponseWriter, r *http.Request) {\n\t\t\tlissajous(w)\n\t\t}\n\t\thttp.HandleFunc(\"/\", handler)\n\t\t//!-http\n\t\tlog.Fatal(http.ListenAndServe(\"localhost:8002\", nil))\n\t\treturn\n\t}\n\t//!+main\n\tlissajous(os.Stdout)\n}\n\nfunc lissajous(out io.Writer) {\n\tconst (\n\t\tcycles  = 5     // number of complete x oscillator revolutions\n\t\tres     = 0.001 // angular resolution\n\t\tsize    = 100   // image canvas covers [-size..+size]\n\t\tnframes = 64    // number of animation frames\n\t\tdelay   = 8     // delay between frames in 10ms units\n\t)\n\tfreq := rand.Float64() * 3.0 // relative frequency of y oscillator\n\tanim := gif.GIF{LoopCount: nframes}\n\tphase := 0.0 // phase difference\n\tfor i := 0; i < nframes; i++ {\n\t\trect := image.Rect(0, 0, 2*size+1, 2*size+1)\n\t\timg := image.NewPaletted(rect, palette)\n\t\tfor t := 0.0; t < cycles*2*math.Pi; t += res {\n\t\t\tx := math.Sin(t)\n\t\t\ty := math.Sin(t*freq + phase)\n\t\t\timg.SetColorIndex(size+int(x*size+0.5), size+int(y*size+0.5),\n\t\t\t\tblackIndex)\n\t\t}\n\t\tphase += 0.1\n\t\tanim.Delay = append(anim.Delay, delay)\n\t\tanim.Image = append(anim.Image, img)\n\t}\n\tgif.EncodeAll(out, &anim) // NOTE: ignoring encoding errors\n}\n\n//!-main\n"
+        }
+    ]
+}

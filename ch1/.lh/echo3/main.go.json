@@ -1,0 +1,30 @@
+{
+    "sourceFile": "echo3/main.go",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 3,
+            "patches": [
+                {
+                    "date": 1711535131438,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1711535141021,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -9,12 +9,14 @@\n import (\n \t\"fmt\"\n \t\"os\"\n \t\"strings\"\n+\t\"time\"\n )\n \n //!+\n func main() {\n+\tstart := time.Now()\n \tfmt.Println(strings.Join(os.Args[1:], \" \"))\n \tfmt.Printf(\"%.6f elapsed\\n\", float64(time.Since(start).Microseconds()))\n }\n \n"
+                },
+                {
+                    "date": 1711535211887,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -12,9 +12,9 @@\n \t\"strings\"\n \t\"time\"\n )\n \n-//!+\n+// !+\n func main() {\n \tstart := time.Now()\n \tfmt.Println(strings.Join(os.Args[1:], \" \"))\n \tfmt.Printf(\"%.6f elapsed\\n\", float64(time.Since(start).Microseconds()))\n"
+                },
+                {
+                    "date": 1711535217378,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -16,8 +16,8 @@\n // !+\n func main() {\n \tstart := time.Now()\n \tfmt.Println(strings.Join(os.Args[1:], \" \"))\n-\tfmt.Printf(\"%.6f elapsed\\n\", float64(time.Since(start).Microseconds()))\n+\tfmt.Printf(\"%.6fus elapsed\\n\", float64(time.Since(start).Microseconds()))\n }\n \n //!-\n"
+                }
+            ],
+            "date": 1711535131438,
+            "name": "Commit-0",
+            "content": "// Copyright © 2016 Alan A. A. Donovan & Brian W. Kernighan.\n// License: https://creativecommons.org/licenses/by-nc-sa/4.0/\n\n// See page 8.\n\n// Echo3 prints its command-line arguments.\npackage main\n\nimport (\n\t\"fmt\"\n\t\"os\"\n\t\"strings\"\n)\n\n//!+\nfunc main() {\n\tfmt.Println(strings.Join(os.Args[1:], \" \"))\n\tfmt.Printf(\"%.6f elapsed\\n\", float64(time.Since(start).Microseconds()))\n}\n\n//!-\n"
+        }
+    ]
+}

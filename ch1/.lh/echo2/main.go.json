@@ -1,0 +1,42 @@
+{
+    "sourceFile": "echo2/main.go",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 6,
+            "patches": [
+                {
+                    "date": 1711534409595,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1711534477922,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -13,9 +13,9 @@\n )\n \n func main() {\n \ts, sep := \"\", \"\"\n-\tfor _, arg := range os.Args[] {\n+\tfor index, arg := range os.Args[1:] {\n \t\ts += sep + arg\n \t\tsep = \" \"\n \t}\n \tfmt.Println(s)\n"
+                },
+                {
+                    "date": 1711534501087,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -14,9 +14,9 @@\n \n func main() {\n \ts, sep := \"\", \"\"\n \tfor index, arg := range os.Args[1:] {\n-\t\ts += sep + arg\n+\t\ts += string(sep + arg\n \t\tsep = \" \"\n \t}\n \tfmt.Println(s)\n }\n"
+                },
+                {
+                    "date": 1711534522993,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -14,9 +14,9 @@\n \n func main() {\n \ts, sep := \"\", \"\"\n \tfor index, arg := range os.Args[1:] {\n-\t\ts += string(sep + arg\n+\t\ts += string(index) + sep + arg \n \t\tsep = \" \"\n \t}\n \tfmt.Println(s)\n }\n"
+                },
+                {
+                    "date": 1711534532961,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -14,9 +14,9 @@\n \n func main() {\n \ts, sep := \"\", \"\"\n \tfor index, arg := range os.Args[1:] {\n-\t\ts += string(index) + sep + arg \n+\t\ts += + sepstring(index)  + arg + \"\\n\"\n \t\tsep = \" \"\n \t}\n \tfmt.Println(s)\n }\n"
+                },
+                {
+                    "date": 1711534539077,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -14,9 +14,9 @@\n \n func main() {\n \ts, sep := \"\", \"\"\n \tfor index, arg := range os.Args[1:] {\n-\t\ts += + sep + string(index + arg + \"\\n\"\n+\t\ts += + sep + string(index) + arg + \"\\n\"\n \t\tsep = \" \"\n \t}\n \tfmt.Println(s)\n }\n"
+                },
+                {
+                    "date": 1711534575844,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -14,9 +14,9 @@\n \n func main() {\n \ts, sep := \"\", \"\"\n \tfor index, arg := range os.Args[1:] {\n-\t\ts += sep + index + arg + \"\\n\"\n+\t\ts += \n \t\tsep = \" \"\n \t}\n \tfmt.Println(s)\n }\n"
+                }
+            ],
+            "date": 1711534409595,
+            "name": "Commit-0",
+            "content": "// Copyright © 2016 Alan A. A. Donovan & Brian W. Kernighan.\n// License: https://creativecommons.org/licenses/by-nc-sa/4.0/\n\n// See page 6.\n//!+\n\n// Echo2 prints its command-line arguments.\npackage main\n\nimport (\n\t\"fmt\"\n\t\"os\"\n)\n\nfunc main() {\n\ts, sep := \"\", \"\"\n\tfor _, arg := range os.Args[] {\n\t\ts += sep + arg\n\t\tsep = \" \"\n\t}\n\tfmt.Println(s)\n}\n\n//!-\n"
+        }
+    ]
+}
